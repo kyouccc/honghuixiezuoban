@@ -1,8 +1,8 @@
 {
   "modelVersion": "6.1.1",
   "name": "honghui",
-  "version": "1.0.0",
-  "description": "鸿绘协作板 - 分布式协同白板应用",
+  "version": "2.7.8",
+  "description": "鸿绘协作板 - HarmonyOS 手写笔记白板（无限画布 / 思维导图 / 闪卡复习）",
   "main": "",
   "author": "Team Honghui",
   "license": "Apache-2.0",

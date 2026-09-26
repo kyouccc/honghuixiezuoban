@@ -1,114 +1,177 @@
 # 鸿绘协作板 Honghui
 
-> 鸿蒙生态中「分布式协同 + 原子化服务 + 端侧AI」三位一体的实时协作白板应用
+> 一个运行在 HarmonyOS NEXT 上的**手写笔记白板**。
+> 核心是一块无限画布：在上面写字、贴便签、画思维导图、做闪卡复习。
+> 笔记默认只存在本机。
 
-## 项目结构
+⚠️ **这是一个个人学习项目，功能还不完整，已知问题见下文。**
+
+---
+
+## 一、这个项目现在能做什么
+
+### 1.1 已经能用
+
+| 功能 | 说明 |
+|---|---|
+| **笔记列表** | 网格展示本地笔记；支持「全部 / 最近 / 收藏 / 闪卡 / 导图」五类筛选；卡片菜单提供收藏、重命名、批注、删除 |
+| **无限画布手写** | 单指平移、双指缩放；画笔（压感）、马克笔、橡皮擦（点擦/线擦）、形状（矩形/圆/箭头/直线）、套索选择、填充、取色 |
+| **撤销 / 重做** | 笔迹、节点操作均可撤销重做 |
+| **文本便签** | 画布上双击创建文本框，支持字号与颜色 |
+| **思维导图** | 独立页面；中心主题 + 多级子节点自动连线；支持从文本大纲批量生成；画布可拖动平移查看 |
+| **闪卡复习** | 知识点做成问答卡；点击翻转；按「忘记 / 模糊 / 记得」三档反馈，按间隔重复安排复习 |
+| **PDF 批注** | 导入 PDF 作为底图，在上面手写批注，可导出 |
+| **导出与分享** | 白板内容导出为 PNG / SVG / PDF；支持调用系统分享面板 |
+| **主题** | 浅色 / 深色 / 跟随系统；纸张样式与主题皮肤 |
+| **本地存储** | 单篇笔记一个目录（含数据文件与资源目录），可用文件管理器直接备份 |
+
+### 1.2 未实现 / 已关闭 —— **请不要期待这些**
+
+| 功能 | 真实状态 |
+|---|---|
+| **跨设备协作（同一块白板多人共写）** | **未完成，入口已关闭**。相关代码保留在 `crdt/`、`network/`、`distributed/`，但功能开关为关（`FEATURE_COLLAB_ENABLED = false`） |
+| **设备发现（附近设备列表）** | **未完成，入口已关闭**（`FEATURE_DEVICE_DISCOVERY_ENABLED = false`） |
+| **手写文字识别 / 端侧 AI** | **未实现**。曾有一版"假 AI"客户端，已于 2026-08-07 全部移除 |
+| **云同步** | **未实现**。当前只能通过文件管理器手动备份笔记目录 |
+| **原子化服务 / 元服务卡片** | **未实现**。`ets/widget/` 为空目录 |
+| **墨水屏 / 折叠屏专属适配** | **未验证**。有部分布局代码，但没有真机验证 |
+| **手写全文检索** | **未实现**。只有文本便签内容参与本地检索 |
+
+> 项目名里的"协作板"是立项时的名字。**当前版本实质是一个单机手写笔记本**，
+> 不要被名字误导 —— 详见「四、关于项目名」。
+
+---
+
+## 二、已知问题
+
+写在这里是为了不误导使用者，也方便有人想帮忙时知道从哪下手。
+
+### 2.1 功能缺陷
+
+- **协作与设备发现处于半成品状态**：代码存在但功能关闭，直接开启大概率不能正常工作（服务端信令未部署，设备发现依赖的运行时权限申请链路也未经真机验证）
+- **PDF 批注**：仅在部分 PDF 上验证过，复杂排版或加密文档可能渲染异常
+- **导出**：个别设备上导出大画布时可能失败（已加落盘校验，失败会明确提示而不是静默产生空文件）
+- **思维导图**：节点数量多时性能下降明显（未做虚拟化 / 视锥裁剪）
+- **闪卡**：间隔重复算法为简化实现，未做长期调度验证
+
+### 2.2 界面与体验
+
+- **平板与手机共用一套布局断点**，未针对不同屏幕尺寸做精细适配，个别界面元素在窄屏上偏挤
+- **深色模式下个别界面元素对比度不足**（主要在早期页面，新页面已统一走主题变量）
+- **部分弹层 / 面板在不同系统版本上位置有偏移**
+- 主界面文字偏多，信息密度高，视觉层级不够清晰
+
+### 2.3 工程质量
+
+- **UI 层没有自动化测试**。`tests/` 下是引擎层的逻辑测试，界面行为靠人工验证
+- **部分历史代码的注释与实现不一致**（多轮迭代遗留）
+- **`crdt/`、`network/`、`distributed/` 三个目录属于未启用功能**，会增加阅读负担
+
+> 上述问题未整理成 issue 列表，如需参与改进请先开 issue 说明方向。
+
+---
+
+## 三、技术实现
+
+### 3.1 技术栈
+
+| 层 | 技术 |
+|---|---|
+| 客户端 | HarmonyOS NEXT · ArkTS / ArkUI（声明式 UI） |
+| 画布渲染 | ArkUI Canvas 2D；四叉树空间索引做视口裁剪；离屏 Canvas 承载静态层 |
+| 笔迹 | 采样点 + 压感（0–255）；二阶贝塞尔曲线拟合 |
+| 本地存储 | 应用沙箱文件系统；单笔记一目录（`board.json` + `resources/` + `meta.json`） |
+| 后端（未启用） | Go + WebSocket 信令网关（`backend/`），未部署 |
+
+### 3.2 目录结构
 
 ```
-honghui/
-├── entry/                     # 鸿蒙元服务主模块 (ArkTS + ArkUI)
-│   ├── module.json5           # 模块配置（Ability声明/NFC权限/元服务卡片）
-│   ├── build-profile.json5    # 编译配置（资源压缩/代码混淆）
-│   └── src/main/ets/
-│       ├── entryability/      # 应用入口（NFC/DeepLink处理）
-│       ├── pages/             # 页面（白板/加入房间/设备管理）
-│       ├── engine/            # 白板引擎（Canvas渲染/笔触/图层/形状/橡皮/撤销）
-│       ├── crdt/              # CRDT RGA算法引擎
-│       ├── distributed/       # 分布式软总线（设备发现/角色分配/状态监听）
-│       ├── ai/                # MindSpore Lite端侧AI（草图识别/OCR/端云协同）
-│       ├── network/           # 网络层（WebSocket/信令编解码/REST API）
-│       ├── widget/            # 元服务卡片
-│       ├── model/             # 数据模型
-│       └── common/            # 公共工具（常量/日志/UUID/性能追踪）
-├── backend/                   # Go后端服务
-│   ├── cmd/signal-gateway/    # 信令网关入口
-│   ├── deploy/k8s/            # K8s部署配置（CCE弹性扩缩）
-│   └── Dockerfile             # 容器构建
-├── proto/                     # Protobuf信令协议定义
-└── docs/                      # 架构设计文档
+entry/src/main/ets/
+├── pages/          页面：笔记列表 / 画布 / PDF批注 / 思维导图 / 闪卡 / 主题 / 隐私
+├── engine/         画布引擎：笔迹、节点、图层、撤销重做、历史、文档导入
+├── canvas/         画布底层：四叉树索引、渲染辅助
+├── components/     可复用组件：笔记卡片、工具栏、各类面板
+├── common/         公共设施：常量与功能开关、日志、主题、工具函数
+├── model/          数据模型
+├── network/        ⚠️ 未启用：协作网络层
+├── crdt/           ⚠️ 未启用：CRDT 合并算法
+├── distributed/    ⚠️ 未启用：分布式设备发现与同步
+└── entryability/   应用入口
+backend/            ⚠️ 未启用：Go 信令网关
+proto/              ⚠️ 未启用：信令协议定义
+tests/              引擎层逻辑测试
+tools/              开发期自检脚本
 ```
 
-## 上架鸿蒙应用市场步骤
+### 3.3 功能开关
 
-### 1. 开发环境准备
+`entry/src/main/ets/common/Constants.ets`：
+
+```ts
+export const FEATURE_COLLAB_ENABLED: boolean = false;            // 跨设备协作
+export const FEATURE_DEVICE_DISCOVERY_ENABLED: boolean = false;  // 附近设备发现
+```
+
+---
+
+## 四、关于项目名
+
+项目叫「鸿绘协作板」，但**当前版本没有可用的协作功能**（见 1.2）。
+
+- 立项初衷是做多设备协同白板，实际交付的是单机手写笔记本
+- 名字暂时保留，以免与已发布的应用名称不一致
+- 后续版本是否补协作功能或改名，取决于实际进展
+
+---
+
+## 五、构建与运行
+
+### 5.1 环境
+
+- DevEco Studio（HarmonyOS NEXT 版本）
+- HarmonyOS SDK API 12 及以上
+
+### 5.2 步骤
+
 ```bash
-# 安装 DevEco Studio 5.0+
-# 下载地址: https://developer.huawei.com/consumer/cn/download/
-
-# 安装 hvigor 构建工具
-# DevEco Studio 自带，命令行使用:
-hvigorw --version
-```
-
-### 2. 构建hap包
-```bash
-# Debug构建
+# 1. 用 DevEco Studio 打开本目录，等待 Sync 完成（会自动下载依赖，约 220MB）
+# 2. 配置签名：File → Project Structure → Signing Configs
+#    本仓库不含签名配置（含明文密码），模板见 build-profile.json5.template
+# 3. 构建
 hvigorw assembleHap -p buildMode=debug
 
-# Release构建（含代码混淆和资源压缩）
-hvigorw assembleHap -p buildMode=release
-
-# 输出路径: entry/build/default/outputs/default/
+# 4. 或直接命令行构建 + 签名
+build-and-sign.bat release
 ```
 
-### 3. 生成签名证书
-1. DevEco Studio → Build → Generate Key and CSR
-2. 在 AppGallery Connect (https://developer.huawei.com) 注册应用
-3. 下载Profile文件(.p7b)
-4. 配置签名: File → Project Structure → Signing Configs
+产物路径：`entry/build/default/outputs/default/`
 
-### 4. 提交审核
-1. 登录 https://developer.huawei.com → 应用市场
-2. 创建应用 → 填写应用信息
-3. 上传hap包
-4. 提交审核（通常3-5个工作日）
+> **注意**：`build-and-sign.bat` 内含中文注释，在中文 Windows 上按 GBK 解析。
+> 若你的系统编码不同，建议手动执行 hvigor 命令。
 
-### 5. 元服务备案
-- 元服务需要单独备案（参考华为元服务审核指南）
-- 在AGC中配置元服务信息
-- 关联FormExtensionAbility
+### 5.3 权限
 
-## 技术亮点
+应用仅申请 `ohos.permission.INTERNET`，不索取通讯录、位置、相册等权限。
 
-| 特性 | 技术方案 | 指标 |
-|------|---------|------|
-| 分布式组网 | OpenHarmony分布式软总线 + NFC | 碰一碰3秒加入（实测中位3.2s） |
-| 白板引擎 | ArkUI Canvas + Catmull-Rom | 笔触≤9ms / ≥55FPS |
-| 多人协作 | CRDT RGA算法 + WebSocket + Redis分片广播 | P95≤150ms |
-| 无网协同 | 近场软总线直连 + CRDT向量时钟对账合并 | 断外网可协作（SV-09） |
-| 弹性架构 | 华为云CCE + HPA + CronHPA定时预扩 + 优雅驱逐 | 10000并发（常态10 Pod承载2万连接） |
-| 端侧AI | MindSpore Lite INT8量化（QuickDraw/CASIA-HWDB微调） | 模型≤20MB / 推理≤50ms |
-| AI纪要官 | CRDT操作日志 → 已备案大模型 → 元服务卡片推送 | 会后自动纪要/待办 |
+---
 
-## 开源协议
+## 六、当前版本
 
-本项目采用 [Apache License 2.0](./LICENSE)，第三方依赖许可清单见 [NOTICE](./NOTICE)。
-
-## 快速开发
+| 项 | 值 |
+|---|---|
+| 版本号 | 2.7.8 / 2007008 |
+| 包名 | `com.honghui.note` |
+| 已发布 | 华为应用市场（2026-09） |
+| 开源协议 | Apache License 2.0 |
 
 ```bash
-# 启动Go后端（本地开发）
-cd backend
-go run cmd/signal-gateway/main.go
-
-# 部署到K8s
-kubectl apply -f backend/deploy/k8s/
+git tag -l          # v2.7.8-appstore 为已发布版本的源码
 ```
 
-## 文档索引
+---
 
-| 文档 | 说明 |
-|---|---|
-| [架构时序图](./docs/sequence-diagram-v2.mermaid) | 端到端调用流程 |
-| [架构类图](./docs/class-diagram-v2.mermaid) | 核心数据模型 |
-| [构建与验证](./docs/BUILD-VERIFY.md) | 如何编译与自检 |
-| [隐私合规](./docs/privacy_compliance.md) | 权限与数据合规说明 |
-| [原子化服务准备](./docs/atomic_service_preparation.md) | 免安装卡片能力规划 |
-| [折叠屏适配](./docs/fold_screen_adaptation.md) | 大屏 / 折叠形态适配 |
-| [一多适配](./docs/one_multiple_adaptation.md) | 一次开发多端部署 |
-| [PDF 栅格化可行性](./docs/v2q1-pdf-rasterize-feasibility.md) | 批注底图技术选型 |
-| [图标规范](./docs/icon-migration-guide.md) | 图标资源规范 |
-| [验收报告模板](./docs/verification-report-template.md) | 真机验证记录模板 |
-| [测试说明](./tests/README.md) | 单元测试与回归说明 |
-| [签名配置模板](./build-profile.json5.template) | 换机后如何恢复签名 |
-| [命令行打包脚本](./build-and-sign.bat) | 命令行构建与签名 |
+## 七、许可证
+
+[Apache License 2.0](./LICENSE)。第三方组件的许可证与版权信息见 [NOTICE](./NOTICE)。
+
+「鸿绘」名称与应用图标的使用权保留。
