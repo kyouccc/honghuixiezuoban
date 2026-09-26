@@ -1,15 +1,14 @@
 @echo off
-chcp 65001 >nul
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
+title Push honghuixiezuoban to GitHub
 
 echo ============================================================
-echo   推送鸿绘协作板到 GitHub
-echo   仓库: honghuixiezuoban
+echo   Push Honghui Board to GitHub
+echo   Repo: honghuixiezuoban
 echo ============================================================
 echo.
 
-REM ── 清除可能存在的代理（代理会导致 CONNECT tunnel failed 502）──
 set http_proxy=
 set https_proxy=
 set HTTP_PROXY=
@@ -17,101 +16,110 @@ set HTTPS_PROXY=
 set ALL_PROXY=
 set all_proxy=
 
-REM ── 关闭证书吊销检查（解决 CRYPT_E_REVOCATION_OFFLINE）──
 git config --global http.schannelCheckRevoke false
+REM Fail fast instead of hanging when the network is blocked.
+git config --global http.lowSpeedLimit 1000
+git config --global http.lowSpeedTime 15
 
-echo [1/6] 当前仓库状态
+echo [1/6] Repository status
 git log --oneline --decorate -8
 echo.
 
-echo [2/6] 自动校验远程仓库地址
-echo       （你的仓库 URL 里可能是 qywccc 或 kyouccc，脚本会自己试出来）
+echo [2/6] Detecting correct remote URL
+REM Fail fast when the network is blocked, instead of hanging.
+set GIT_TERMINAL_PROMPT=0
+set GIT_HTTP_TIMEOUT=15
+set GIT_HTTP_LOW_SPEED_LIMIT=1000
+set GIT_HTTP_LOW_SPEED_TIME=15
 set "URL_A=https://github.com/qywccc/honghuixiezuoban.git"
 set "URL_B=https://github.com/kyouccc/honghuixiezuoban.git"
 set "GOODURL="
 
 git remote set-url origin %URL_A%
 git ls-remote origin >nul 2>nul
-if not errorlevel 1 (
-    set "GOODURL=%URL_A%"
-    echo       [OK] 地址可用: !GOODURL!
-    goto REMOTE_DONE
-)
+if not errorlevel 1 goto OK_A
 
-echo       第一个地址不通，尝试 kyouccc ...
+echo       qywccc not reachable, trying kyouccc ...
 git remote set-url origin %URL_B%
 git ls-remote origin >nul 2>nul
-if not errorlevel 1 (
-    set "GOODURL=%URL_B%"
-    echo       [OK] 地址可用: !GOODURL!
-    goto REMOTE_DONE
-)
+if not errorlevel 1 goto OK_B
 
 echo.
-echo       [失败] 两个地址都无法访问。请按以下步骤处理：
+echo       [FAIL] Neither URL is reachable.
 echo.
-echo       1) 在浏览器打开你的 GitHub 仓库页面，看地址栏：
-echo          地址栏形如  https://github.com/【你的用户名】/honghuixiezuoban
-echo       2) 把【你的用户名】填到下面这条命令里执行，然后重新运行本脚本：
-echo.
-echo          git remote set-url origin https://github.com/你的用户名/honghuixiezuoban.git
-echo.
-echo       3) 若地址没错但仍不通，说明是网络问题 —— 开启代理软件（VPN）后重试。
+echo       1. Open your repo page in a browser and look at the address bar:
+echo          https://github.com/^<YOUR-USERNAME^>/honghuixiezuoban
+echo       2. Run this with your real username, then re-run this script:
+echo          git remote set-url origin https://github.com/YOURNAME/honghuixiezuoban.git
+echo       3. If the URL is correct but still fails, your network blocks GitHub.
+echo          Turn on your VPN / proxy software and retry.
 echo.
 pause
 exit /b 1
 
-:REMOTE_DONE
-echo.
+:OK_A
+set "GOODURL=%URL_A%"
+echo       [OK] %URL_A%
+goto SECURITY
 
-echo [3/6] 安全检查
+:OK_B
+set "GOODURL=%URL_B%"
+echo       [OK] %URL_B%
+goto SECURITY
+
+:SECURITY
+echo.
+echo [3/6] Security checks
 git ls-files | findstr /X "build-profile.json5" >nul 2>nul
-if %errorlevel%==0 (
-    echo       [危险] build-profile.json5 被跟踪！其中含明文签名密码，绝不能推送。
-    echo              处理: git rm --cached build-profile.json5
+if not errorlevel 1 (
+    echo       [DANGER] build-profile.json5 is tracked and contains plain-text signing passwords.
+    echo                Run:  git rm --cached build-profile.json5
     pause
     exit /b 1
 )
 git ls-files | findstr /R /I "\.p12$ \.p7b$ \.cer$ \.keystore$ \.jks$" >nul 2>nul
-if %errorlevel%==0 (
-    echo       [危险] 检测到证书文件被跟踪，绝不能推送。
+if not errorlevel 1 (
+    echo       [DANGER] Certificate files are tracked. Do NOT push.
     git ls-files | findstr /R /I "\.p12$ \.p7b$ \.cer$"
     pause
     exit /b 1
 )
 git log -p --all > "%TEMP%\_histscan.txt" 2>nul
 findstr /R /C:"storePassword=[0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F]" "%TEMP%\_histscan.txt" >nul 2>nul
-if %errorlevel%==0 (
-    echo       [危险] git 历史中发现疑似真实密码！只删文件没用，需重写历史或删库重建。
+if not errorlevel 1 (
+    echo       [DANGER] A real password was found in git history.
+    echo                Deleting the file is not enough - you must rewrite history or recreate the repo.
     del "%TEMP%\_histscan.txt" >nul 2>nul
     pause
     exit /b 1
 )
 del "%TEMP%\_histscan.txt" >nul 2>nul
-echo       [通过] 签名配置未跟踪 / 无证书入库 / 历史无真实密码
+echo       [PASS] no signing config tracked / no certificates / no real password in history
 echo.
 
-echo [4/6] 推送 main 分支（8 个提交）
+echo [4/6] Pushing main branch
+REM Restore interactive auth so Git Credential Manager can open the browser.
+set GIT_TERMINAL_PROMPT=
+set GIT_HTTP_TIMEOUT=
+set GIT_HTTP_LOW_SPEED_LIMIT=
+set GIT_HTTP_LOW_SPEED_TIME=
 echo.
-echo   ┌─────────────────────────────────────────────────────┐
-echo   │ 若弹出浏览器窗口 → 登录你的 GitHub 账号并授权即可   │
-echo   │ （已配置 Git Credential Manager，无需 Personal Token）│
-echo   └─────────────────────────────────────────────────────┘
+echo       A browser window may pop up. Just log in to GitHub and authorize.
 echo.
 git push -u origin main
 if errorlevel 1 goto FAIL
 
 echo.
-echo [5/6] 推送标签 v2.7.8-appstore
+echo [5/6] Pushing tag v2.7.8-appstore
 git push origin --tags
 if errorlevel 1 goto FAIL
 
 echo.
-echo [6/6] 完成
+echo [6/6] DONE
 echo.
 echo ============================================================
-echo   推送成功！
-echo   打开查看: !GOODURL:.git=!
+echo   PUSH SUCCEEDED
+echo   Open: %GOODURL:.git=%
 echo ============================================================
 pause
 exit /b 0
@@ -119,31 +127,29 @@ exit /b 0
 :FAIL
 echo.
 echo ============================================================
-echo   推送失败。按提示的数字对号入座：
+echo   PUSH FAILED - find your error below
 echo.
-echo   【弹窗要求输入用户名密码】
-echo     - 用户名填你的 GitHub 用户名
-echo     - 密码栏【必须填 Personal Access Token】，
-echo       GitHub 不接受登录密码，也不是 QQ 邮箱密码
-echo     - 生成: GitHub -^> Settings -^> Developer settings
-echo             -^> Personal access tokens -^> Tokens (classic)
-echo             -^> Generate new token，勾选 repo 权限，复制得到的 ghp_ 开头的串
-echo     - 更简单: 先执行 git config --global credential.helper manager
-echo       推送时会自动弹浏览器登录，无需 Token
+echo   [asks for username / password]
+echo     - Username: your GitHub username
+echo     - Password: must be a Personal Access Token, NOT your login password
+echo     - Create one: GitHub - Settings - Developer settings
+echo       - Personal access tokens - Tokens classic - Generate new token
+echo       - check the "repo" scope, then copy the ghp_... string
+echo     - Easier: git config --global credential.helper manager
+echo       then a browser window handles the login for you
 echo.
-echo   【CONNECT tunnel failed / 502 / Could not connect】
-echo     - 存在代理或网络受限。脚本已尝试清除代理，
-echo       若仍失败请开启代理软件（VPN）后重试。
+echo   [CONNECT tunnel failed / 502 / Could not connect]
+echo     - Proxy or network issue. Turn on your VPN and retry.
 echo.
-echo   【CRYPT_E_REVOCATION_OFFLINE】
-echo     - 执行: git config --global http.sslBackend openssl
+echo   [CRYPT_E_REVOCATION_OFFLINE]
+echo     - Run: git config --global http.sslBackend openssl
 echo.
-echo   【repository not found / 404】
-echo     - 远程地址里的用户名不对。到浏览器看你的仓库地址栏，
-echo       然后: git remote set-url origin https://github.com/用户名/honghuixiezuoban.git
+echo   [repository not found / 404]
+echo     - Wrong username in the remote URL. Check your browser address bar, then:
+echo       git remote set-url origin https://github.com/USERNAME/honghuixiezuoban.git
 echo.
-echo   【rejected / fetch first】
-echo     - 远程已有内容。执行: git pull --rebase origin main 后再推
+echo   [rejected / fetch first]
+echo     - Remote already has commits. Run: git pull --rebase origin main
 echo ============================================================
 pause
 exit /b 1
