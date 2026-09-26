@@ -1,78 +1,48 @@
 鸿绘协作板 Honghui
 Copyright 2026 Honghui Contributors
 
-本产品基于 Apache License 2.0 开源，使用了以下第三方开源组件：
+本产品基于 Apache License 2.0 开源。
 
 ═══════════════════════════════════════════════
-Go 后端依赖
+第三方开源组件
 ═══════════════════════════════════════════════
 
-github.com/gobwas/ws v1.4.0
-  License: BSD 2-Clause
-  Copyright (c) 2017-2021 Ilya Kamelin, gobwas contributors
-  https://github.com/gobwas/ws/blob/master/LICENSE
+本项目的 HarmonyOS 客户端**未使用任何第三方开源库**。
 
-github.com/gin-gonic/gin v1.10.0
-  License: MIT
-  Copyright (c) 2014 Manuel Martínez-Almeida
-  https://github.com/gin-gonic/gin/blob/master/LICENSE
+`oh-package.json5` 中的 dependencies 为空，全部能力均基于
+HarmonyOS 系统 API 实现（@kit.* 与 @ohos.* 系列），包括：
 
-github.com/redis/go-redis/v9 v9.7.0
-  License: BSD 2-Clause
-  Copyright (c) 2013 The github.com/redis/go-redis Authors
+  @kit.ArkUI / @kit.ArkTS        —— 声明式 UI 与并发
+  @kit.AbilityKit                —— 应用能力与上下文
+  @kit.ArkData                   —— 分布式数据对象
+  @kit.CoreFileKit               —— 文件读写
+  @kit.NetworkKit                —— 网络状态
+  @kit.PDFKit                    —— PDF 渲染
+  @kit.ShareKit                  —— 系统分享
+  @kit.BasicServicesKit          —— 基础服务
+  @kit.PerformanceAnalysisKit    —— 日志与性能
+  @ohos.file.fs / file.picker    —— 文件系统与文件选择器
+  @ohos.multimedia.image         —— 图像处理
+  @ohos.pasteboard               —— 剪贴板
+  @ohos.window                   —— 窗口与安全区
+  @ohos.app.ability.*            —— Ability 与错误处理
+  @ohos.abilityAccessCtrl        —— 运行时权限
+  @ohos.distributedDeviceManager —— 分布式设备管理（未启用功能预留）
+  @ohos.net.connection           —— 网络连接管理
+  @ohos.faultLogger              —— 故障日志
 
-google.golang.org/protobuf v1.36.5
-  License: BSD 3-Clause
-  Copyright (c) 2018 The Go Authors / Google Inc.
+这些均为 HarmonyOS SDK 内置接口，随操作系统分发，
+不构成第三方组件的再分发。
 
-github.com/golang-jwt/jwt/v5 v5.2.1
-  License: MIT
-  Copyright (c) 2012 Dave Grijalva / golang-jwt maintainers
-
-github.com/prometheus/client_golang v1.20.5
-  License: Apache License 2.0
-  Copyright (c) 2012-2025 The Prometheus Authors
-
-go.uber.org/zap v1.27.0
-  License: MIT
-  Copyright (c) 2016-2023 Uber Technologies, Inc.
-
-═══════════════════════════════════════════════
-鸿蒙端（ArkTS）依赖
-═══════════════════════════════════════════════
-
-MindSpore Lite (@mindspore/mindspore-lite-ets) 2.3+
-  License: Apache License 2.0
-  Copyright (c) MindSpore Authors
-  https://gitee.com/mindspore/mindspore-lite
-
-protobuf.js 7.4+
-  License: BSD 3-Clause
-  Copyright (c) 2016, Daniel Wirtz / protobuf.js contributors
-
-pako 2.1+
-  License: MIT AND Zlib
-  Copyright (c) 2014-2017 Vitaly Puzrin, Andrey Tupitsin
-
-OpenHarmony 系统 API (@ohos.distributedDeviceManager / @ohos.nfc 等)
-  License: Apache License 2.0
-  Copyright (c) OpenAtom Foundation / OpenHarmony contributors
-
-═══════════════════════════════════════════════
-数据集与模型（端侧AI微调基线）
-═══════════════════════════════════════════════
-
-QuickDraw Dataset (Google)
-  License: CC BY 4.0
-  https://github.com/googlecreativelab/quickdraw-dataset
-
-CASIA-HWDB / SCUT-EPT 手写数据集
-  学术用途授权，商用前需确认许可条款
-  http://www.nlpr.ia.ac.cn/databases/handwriting/Home.html
+开发期辅助脚本（`tools/` 目录）仅使用 Node.js 与 Python 标准库，
+不随应用打包分发。
 
 ═══════════════════════════════════════════════
 说明
 ═══════════════════════════════════════════════
 
-上述组件的完整许可证文本见其各自上游仓库。
-本项目代码不包含任何 GPL/LGPL 组件，与 Apache-2.0 分发兼容。
+本项目不含任何 GPL / LGPL 组件，与 Apache-2.0 分发兼容。
+
+早期版本曾规划使用 MindSpore Lite（端侧推理）、protobuf.js、pako 等组件，
+但相关功能最终未实现，代码已于 2026-08-07 全部移除，
+因此本文件不再列出这些未实际使用的组件。
