@@ -1,4 +1,7 @@
 @echo off
+REM Set console to UTF-8 so Chinese commit messages render correctly.
+REM Safe here because this .bat is 100% ASCII (cmd parses the file with the ANSI codepage).
+chcp 65001 >nul
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
 title Push honghuixiezuoban to GitHub
@@ -26,46 +29,56 @@ git log --oneline --decorate -8
 echo.
 
 echo [2/6] Detecting correct remote URL
-REM Fail fast when the network is blocked, instead of hanging.
+REM Fail fast and do not open a browser during detection.
 set GIT_TERMINAL_PROMPT=0
+set GCM_INTERACTIVE=never
 set GIT_HTTP_TIMEOUT=15
-set GIT_HTTP_LOW_SPEED_LIMIT=1000
-set GIT_HTTP_LOW_SPEED_TIME=15
 set "URL_A=https://github.com/qywccc/honghuixiezuoban.git"
 set "URL_B=https://github.com/kyouccc/honghuixiezuoban.git"
 set "GOODURL="
 
-git remote set-url origin %URL_A%
-git ls-remote origin >nul 2>nul
-if not errorlevel 1 goto OK_A
-
-echo       qywccc not reachable, trying kyouccc ...
-git remote set-url origin %URL_B%
-git ls-remote origin >nul 2>nul
-if not errorlevel 1 goto OK_B
+call :PROBE A "%URL_A%"
+if defined GOODURL goto SECURITY
+call :PROBE B "%URL_B%"
+if defined GOODURL goto SECURITY
 
 echo.
-echo       [FAIL] Neither URL is reachable.
+echo       [FAIL] Neither URL works. See the real errors above.
 echo.
-echo       1. Open your repo page in a browser and look at the address bar:
-echo          https://github.com/^<YOUR-USERNAME^>/honghuixiezuoban
-echo       2. Run this with your real username, then re-run this script:
-echo          git remote set-url origin https://github.com/YOURNAME/honghuixiezuoban.git
-echo       3. If the URL is correct but still fails, your network blocks GitHub.
-echo          Turn on your VPN / proxy software and retry.
+echo       HOW TO READ THE ERROR ABOVE:
+echo.
+echo       * "Repository not found" / "404" / "Authentication failed"
+echo         -> The username in the URL is wrong, OR the repo is private.
+echo            Fix: open your repo in a browser, copy the address bar,
+echo                 then run:
+echo                 git remote set-url origin https://github.com/REAL-USER/honghuixiezuoban.git
+echo.
+echo       * "Could not resolve host" / "Could not connect" / "timed out"
+echo         -> Network problem. GitHub is unreachable from your machine.
+echo            Turn on your VPN / proxy and retry.
+echo.
+echo       * "CONNECT tunnel failed" / "502"
+echo         -> A proxy is intercepting the connection. Close your proxy
+echo            software, or set it to bypass github.com, then retry.
 echo.
 pause
 exit /b 1
 
-:OK_A
-set "GOODURL=%URL_A%"
-echo       [OK] %URL_A%
-goto SECURITY
-
-:OK_B
-set "GOODURL=%URL_B%"
-echo       [OK] %URL_B%
-goto SECURITY
+:PROBE
+REM %1 = label, %2 = url
+echo.
+echo       Testing %2
+git ls-remote %2 > "%TEMP%\_probe.txt" 2>&1
+if not errorlevel 1 (
+    set "GOODURL=%2"
+    echo       [OK] reachable
+    del "%TEMP%\_probe.txt" >nul 2>nul
+    goto :eof
+)
+echo       [FAIL] git says:
+type "%TEMP%\_probe.txt"
+del "%TEMP%\_probe.txt" >nul 2>nul
+goto :eof
 
 :SECURITY
 echo.
