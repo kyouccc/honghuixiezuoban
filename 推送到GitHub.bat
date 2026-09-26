@@ -33,8 +33,10 @@ REM Fail fast and do not open a browser during detection.
 set GIT_TERMINAL_PROMPT=0
 set GCM_INTERACTIVE=never
 set GIT_HTTP_TIMEOUT=15
-set "URL_A=https://github.com/qywccc/honghuixiezuoban.git"
-set "URL_B=https://github.com/kyouccc/honghuixiezuoban.git"
+REM Confirmed by live probe: the repo lives under kyouccc.
+REM Fallback to qywccc is kept in case the account is renamed later.
+set "URL_A=https://github.com/kyouccc/honghuixiezuoban.git"
+set "URL_B=https://github.com/qywccc/honghuixiezuoban.git"
 set "GOODURL="
 
 call :PROBE A "%URL_A%"
@@ -48,17 +50,17 @@ echo.
 echo       HOW TO READ THE ERROR ABOVE:
 echo.
 echo       * "Repository not found" / "404" / "Authentication failed"
-echo         -> The username in the URL is wrong, OR the repo is private.
+echo         [!] The username in the URL is wrong, OR the repo is private.
 echo            Fix: open your repo in a browser, copy the address bar,
 echo                 then run:
 echo                 git remote set-url origin https://github.com/REAL-USER/honghuixiezuoban.git
 echo.
 echo       * "Could not resolve host" / "Could not connect" / "timed out"
-echo         -> Network problem. GitHub is unreachable from your machine.
+echo         [!] Network problem. GitHub is unreachable from your machine.
 echo            Turn on your VPN / proxy and retry.
 echo.
 echo       * "CONNECT tunnel failed" / "502"
-echo         -> A proxy is intercepting the connection. Close your proxy
+echo         [!] A proxy is intercepting the connection. Close your proxy
 echo            software, or set it to bypass github.com, then retry.
 echo.
 pause
