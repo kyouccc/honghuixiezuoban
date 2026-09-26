@@ -74,3 +74,8 @@ _c02test/
 # ── 构建日志（txt 形式）──
 build_*.txt
 build_errors*.txt
+
+# ── 仅本地使用、不随开源仓库发布 ──
+GIT使用指南.md
+开源发布指南-GitHub.md
+推送到GitHub.bat

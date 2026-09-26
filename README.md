@@ -104,13 +104,11 @@ kubectl apply -f backend/deploy/k8s/
 | [构建与验证](./docs/BUILD-VERIFY.md) | 如何编译与自检 |
 | [隐私合规](./docs/privacy_compliance.md) | 权限与数据合规说明 |
 | [原子化服务准备](./docs/atomic_service_preparation.md) | 免安装卡片能力规划 |
-| [折叠屏适配](./docs/fold_screen_adaptation.md) | 大屏/折叠形态适配 |
+| [折叠屏适配](./docs/fold_screen_adaptation.md) | 大屏 / 折叠形态适配 |
 | [一多适配](./docs/one_multiple_adaptation.md) | 一次开发多端部署 |
-| [墨水屏适配](./docs/) | 见 `docs/` 目录 |
 | [PDF 栅格化可行性](./docs/v2q1-pdf-rasterize-feasibility.md) | 批注底图技术选型 |
-| [图标迁移说明](./docs/icon-migration-guide.md) | 图标资源规范 |
-| [优化总结](./docs/final-optimization-summary.md) | 性能优化记录 |
+| [图标规范](./docs/icon-migration-guide.md) | 图标资源规范 |
 | [验收报告模板](./docs/verification-report-template.md) | 真机验证记录模板 |
-| [Git 使用指南](./GIT使用指南.md) | 版本管理与发版流程 |
-| [构建与签名脚本](./build-and-sign.bat) | 命令行打包 |
+| [测试说明](./tests/README.md) | 单元测试与回归说明 |
 | [签名配置模板](./build-profile.json5.template) | 换机后如何恢复签名 |
+| [命令行打包脚本](./build-and-sign.bat) | 命令行构建与签名 |
