@@ -55,7 +55,7 @@ struct PrivacyPage {
           this.buildDivider();
 
           this.buildSection('七、联系我们',
-            '如有隐私相关问题，请联系：\n邮箱：privacy@harmonycanvas.dev\n我们将在15个工作日内回复您的请求。')
+            '如有隐私相关问题，请联系：\n邮箱：privacy@honghui.dev\n我们将在15个工作日内回复您的请求。')
 
           Blank().height(40)
         }

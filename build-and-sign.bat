@@ -33,11 +33,11 @@ if %HAP_SIZE_MB% GTR 10 (
 REM 3. 签名 (使用DevEco Studio生成的.p12和.cer)
 echo [3/4] 签名...
 hvigorw packageSign -p buildMode=%BUILD_MODE% ^
-    -p storeFile=harmonycanvas.p12 ^
+    -p storeFile=honghui.p12 ^
     -p storePassword=your_password ^
-    -p keyAlias=harmonycanvas ^
+    -p keyAlias=honghui ^
     -p keyPassword=your_password ^
-    -p profile=harmonycanvas_release.p7b
+    -p profile=honghui_release.p7b
 if %ERRORLEVEL% NEQ 0 (
     echo 签名失败! 请检查签名配置
     exit /b 1

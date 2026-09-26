@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: harmonycanvas-config
-  namespace: harmonycanvas
+  name: honghui-config
+  namespace: honghui
 data:
-  redis.addr: "redis-cluster.harmonycanvas.svc:6379"
+  redis.addr: "redis-cluster.honghui.svc:6379"
   redis.password: ""
   room.max_participants: "50"
   room.snapshot_interval_sec: "300"

@@ -7,7 +7,7 @@ apiVersion: autoscaling.alicloud.com/v1beta1
 kind: CronHorizontalPodAutoscaler
 metadata:
   name: signal-gateway-cronhpa
-  namespace: harmonycanvas
+  namespace: honghui
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

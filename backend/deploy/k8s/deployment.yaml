@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: signal-gateway
-  namespace: harmonycanvas
+  namespace: honghui
 spec:
   replicas: 2
   selector:
@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: signal-gateway
-        image: swr.cn-north-4.myhuaweicloud.com/harmonycanvas/signal-gateway:v1.0.0
+        image: swr.cn-north-4.myhuaweicloud.com/honghui/signal-gateway:v1.0.0
         ports:
         - name: http
           containerPort: 8080
@@ -42,7 +42,7 @@ spec:
         - name: REDIS_ADDR
           valueFrom:
             configMapKeyRef:
-              name: harmonycanvas-config
+              name: honghui-config
               key: redis.addr
         - name: LOG_LEVEL
           value: "info"

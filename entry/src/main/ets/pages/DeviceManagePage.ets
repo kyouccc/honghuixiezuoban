@@ -465,7 +465,7 @@ struct DeviceManagePage {
    *   真因有两条 ——
    *   ① `DeviceDiscovery.initialize()` **全项目从未被调用**，内部 dmInstance 恒为 null，
    *      isDiscoverySupported() 必然 false，页面永远走"开发中"分支；
-   *   ② initialize 内部把 bundleName 硬编码成 'com.harmonycanvas.app'，
+   *   ② initialize 内部把 bundleName 硬编码成 'com.honghui.app'，
    *      与本应用真实包名 com.honghui.note 不符，即便调用了也创建不出 DeviceManager。
    *   现在：先注入**真实包名**完成初始化，再读取同账号下已就绪的分布式设备。
    *   拿不到设备时给出可操作的指引，而不是一句"开发中"把用户挡死。

@@ -8,7 +8,7 @@
  *   - token       服务端签发的 JWT。空串 = 未认证。
  *
  * 三者严禁串用：任何协议字段（sender_id / assertion.user_id / undo 归属）只能取 userId，
- * 永不取 displayName（见 architecture-harmonycanvas-dualchannel-v1.md §4.3 / §9 约定 S）。
+ * 永不取 displayName（见 architecture-honghui-dualchannel-v1.md §4.3 / §9 约定 S）。
  */
 
 /** 身份快照：单一身份源 SessionIdentity 对外暴露的不可变视图 */

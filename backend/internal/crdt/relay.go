@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"harmonycanvas/backend/internal/auth"
+	"honghui/backend/internal/auth"
 )
 
 // 消息类型（与 proto MsgType 对齐）

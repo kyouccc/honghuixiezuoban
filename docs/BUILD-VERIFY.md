@@ -1,7 +1,7 @@
-# HarmonyCanvas 构建验证固化手册（BUILD-VERIFY）
+# Honghui 构建验证固化手册（BUILD-VERIFY）
 
 > 作者：寇豆码（ArkTS 工程师）
-> 适用：HarmonyCanvas entry 模块 hvigor 全量构建
+> 适用：Honghui entry 模块 hvigor 全量构建
 > 硬约束：构建必须**真实编译通过**（`ERROR=0`），且日志中必须出现 `CompileArkTS` /
 > `:entry:default@CompileArkTS`；**禁止中途 kill 构建进程**。
 
@@ -68,7 +68,7 @@
 ### 坑 5：`hvigorw.js` 不在工程根 → `Error: Cannot find module ... MODULE_NOT_FOUND`
 
 - **症状**：执行构建直接报错退出，完全没有后续编译日志：
-  `Error: Cannot find module '...\harmonycanvas\hvigorw.js' code: 'MODULE_NOT_FOUND'`（EXIT=1）。
+  `Error: Cannot find module '...\honghui\hvigorw.js' code: 'MODULE_NOT_FOUND'`（EXIT=1）。
 - **原因**：本仓工程根**没有** `hvigorw.js`（仅含 `hvigorfile.ts` 与 `hvigor/hvigor-config.json5`，
   无 `node_modules`）。`hvigorw.js` 随 DevEco Studio 安装，位于其 `tools/hvigor/bin/` 子目录。
 - **解法**：改用 DevEco 安装目录下的绝对路径，并用 `DEVECO_HOME` 变量抽象（见 §2 ②）：
@@ -106,7 +106,7 @@
 
 ```bash
 # ① 进入工程根
-cd "<工程根>/harmonycanvas"
+cd "<工程根>/honghui"
 
 # ② 环境变量（DEVECO_HOME 抽象 hvigorw.js 位置）
 export DEVECO_HOME="C:/Program Files/Huawei/DevEco Studio"

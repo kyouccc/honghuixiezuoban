@@ -1,4 +1,4 @@
-module harmonycanvas/backend
+module honghui/backend
 
 go 1.21
 

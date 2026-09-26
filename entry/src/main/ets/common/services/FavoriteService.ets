@@ -48,6 +48,8 @@ export class FavoriteService {
   async initialize(context: common.UIAbilityContext): Promise<void> {
     try {
       // 获取 Preferences 实例
+      // ⚠️ 键名保持 'harmonycanvas_favorites' 不可改：向下兼容已发布版本的用户收藏数据，
+      //    修改后老用户升级会看不到自己的收藏。属历史数据兼容键，与项目命名无关。
       this.preferences = await preferences.getPreferences(context, 'harmonycanvas_favorites');
       
       // 加载收藏列表

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"harmonycanvas/backend/internal/auth"
+	"honghui/backend/internal/auth"
 )
 
 // Session 笔记协作会话。

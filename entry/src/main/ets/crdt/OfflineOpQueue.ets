@@ -2,7 +2,7 @@
  * OfflineOpQueue.ets — 离线操作补发队列（C03 · Q14）
  *
  * 断网期间 CRDT op 入队，恢复连接后按序补发（onOpen 排空）。
- * 语义（Q14 已拍板，architecture-harmonycanvas-dualchannel-v1.md §4.5）：
+ * 语义（Q14 已拍板，architecture-honghui-dualchannel-v1.md §4.5）：
  *  - 容量上限 2000 条：超限按 **FIFO 淘汰最旧**（保新不保旧：用户更在意刚画的）；
  *  - 持久化：不做（.hcnote 落盘链路超出本期范围）；
  *  - 淘汰行为：Logger.warn（由调用方记录）+ droppedCount 累计 + UI 告警（§4.6，

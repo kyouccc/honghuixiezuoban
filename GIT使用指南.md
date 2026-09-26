@@ -26,7 +26,7 @@
 ## 二、日常开发流程（每改一小步就提交一次）
 
 ```bash
-cd C:\Users\27968\WorkBuddy\2026-08-03-10-35-19\harmonycanvas
+cd C:\Users\27968\WorkBuddy\2026-08-03-10-35-19\honghui
 
 git status                # 看改了哪些文件
 git diff                  # 看具体改了什么
@@ -138,7 +138,7 @@ git push --tags
 ## 七、换电脑怎么恢复
 
 1. 解压 `鸿绘-源码备份-v2.7.8.zip`（或 `git clone` 远程仓库）
-2. 用 DevEco Studio 打开 `harmonycanvas`
+2. 用 DevEco Studio 打开 `honghui`
 3. **配置签名**：File → Project Structure → Signing Configs
    - 勾选「Automatically generate signature」（需登录华为账号），或
    - 手动选择 `D:/honghui_board_debug.p12` 等文件并填入密码

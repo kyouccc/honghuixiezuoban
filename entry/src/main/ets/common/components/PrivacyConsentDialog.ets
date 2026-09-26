@@ -74,7 +74,7 @@ export struct PrivacyConsentDialog {
             '6.1 导出功能：当前版本支持将白板内容导出为PNG图片、SVG矢量图及PDF文档。');
 
           this.buildSection('七、联系我们',
-            '如有隐私相关问题，请联系：\n邮箱：privacy@harmonycanvas.dev\n我们将在15个工作日内回复您的请求。');
+            '如有隐私相关问题，请联系：\n邮箱：privacy@honghui.dev\n我们将在15个工作日内回复您的请求。');
 
           Text('我们承诺：您的数据会被安全存储，不会泄露给第三方。您可以随时在设置中查看、导出或删除您的数据。')
             .fontSize(12)

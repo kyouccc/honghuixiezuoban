@@ -2,7 +2,7 @@
  * run-c03-verify.mjs — C03 编解码加固 + 离线补发 Node 逻辑验证
  *
  * 沿用仓库既有模式（tests/run-node-verify.mjs + tests/ets-loader.mjs）：
- * 运行：cd harmonycanvas/tests && node --experimental-transform-types --experimental-loader=./ets-loader.mjs run-c03-verify.mjs
+ * 运行：cd honghui/tests && node --experimental-transform-types --experimental-loader=./ets-loader.mjs run-c03-verify.mjs
  *
  * 覆盖（对应 C03 验收）：
  *  ① 畸形 wireType 1/5 消息 decode 不死循环、不抛未捕获异常、优雅丢弃

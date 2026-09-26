@@ -1,3 +1,0 @@
-'#2E6BE6' -> HCColor.PRIMARY x4
-'#F5F6F8' -> HCColor.PAGE_BG x2
-TOTAL=6

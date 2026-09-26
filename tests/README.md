@@ -1,4 +1,4 @@
-# HarmonyCanvas v2.0 阶段一（S1T01~S1T03）QA 测试说明
+# Honghui v2.0 阶段一（S1T01~S1T03）QA 测试说明
 
 > 作者：严过关（QA）· 2026-08-04
 > 验证对象：`entry/src/main/ets/engine/` 下 BrushRegistry / PaperLayerRenderer / TextBlockTool /
@@ -19,7 +19,7 @@
 **运行方式（Node ≥22.7，需 --experimental-transform-types）：**
 
 ```bash
-cd harmonycanvas/tests
+cd honghui/tests
 node --experimental-transform-types --experimental-loader=./ets-loader.mjs run-node-verify.mjs
 ```
 

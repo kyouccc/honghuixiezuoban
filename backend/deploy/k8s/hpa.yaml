@@ -6,7 +6,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: signal-gateway-hpa
-  namespace: harmonycanvas
+  namespace: honghui
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

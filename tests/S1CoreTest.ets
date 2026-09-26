@@ -1,5 +1,5 @@
 /**
- * S1CoreTest.ets — HarmonyCanvas v2.0 阶段一 P0 核心模块测试（QA，S1T01~S1T03）
+ * S1CoreTest.ets — Honghui v2.0 阶段一 P0 核心模块测试（QA，S1T01~S1T03）
  *
  * 测试范围：
  *  - BrushRegistry：6 笔刷配置完整性、samplePressureCurve 采样（端点/插值/clamp）、未知笔型回退、副本防篡改

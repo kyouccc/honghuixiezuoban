@@ -18,10 +18,10 @@ import (
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 
-	"harmonycanvas/backend/internal/auth"
-	"harmonycanvas/backend/internal/crdt"
-	"harmonycanvas/backend/internal/room"
-	ws "harmonycanvas/backend/internal/ws"
+	"honghui/backend/internal/auth"
+	"honghui/backend/internal/crdt"
+	"honghui/backend/internal/room"
+	ws "honghui/backend/internal/ws"
 )
 
 // draining 优雅驱逐标记（v1.1）。
@@ -55,7 +55,7 @@ func main() {
 	rdb := redis.NewClient(&redis.Options{Addr: *redisAddr})
 
 	// v2.0：初始化权限存储 + 会话存储 + CRDT 中继
-	permStore = auth.NewPermissionStore("harmonycanvas-session-secret")
+	permStore = auth.NewPermissionStore("honghui-session-secret")
 	sessStore = room.NewStore()
 	relay = crdt.NewRelay(permStore)
 
@@ -153,7 +153,7 @@ func createRoomHandler(c *gin.Context) {
 			"name":        "example room",
 			"join_code":   "123456",
 			"nfc_token":   "nfc_hash_xxx",
-			"ws_endpoint": "wss://ws.harmonycanvas.dev/ws?room=r_a1b2c3d4",
+			"ws_endpoint": "wss://ws.honghui.dev/ws?room=r_a1b2c3d4",
 			"created_at":  time.Now().Format(time.RFC3339),
 			"expires_at":  time.Now().Add(6 * time.Hour).Format(time.RFC3339),
 		},
@@ -166,7 +166,7 @@ func joinRoomHandler(c *gin.Context) {
 		"data": gin.H{
 			"user_id":     "u_x1y2z3",
 			"token":       "jwt_token_xxx",
-			"ws_endpoint": "wss://ws.harmonycanvas.dev/ws?room=r_a1b2c3d4",
+			"ws_endpoint": "wss://ws.honghui.dev/ws?room=r_a1b2c3d4",
 			"room_state": gin.H{
 				"participants": 1,
 				"layers":       []interface{}{},
@@ -224,7 +224,7 @@ func createSessionHandler(c *gin.Context) {
 		defaultRole = auth.RoleFromString(req.DefaultRole)
 	}
 	sessionID := "s_" + randHex(8)
-	sess := sessStore.Create(sessionID, req.Name, req.NoteID, creatorID, "wss://ws.harmonycanvas.dev/ws?room="+sessionID, defaultRole, 6*time.Hour)
+	sess := sessStore.Create(sessionID, req.Name, req.NoteID, creatorID, "wss://ws.honghui.dev/ws?room="+sessionID, defaultRole, 6*time.Hour)
 	permStore.CacheRole(sessionID, creatorID, auth.RoleEditor)
 
 	assertion := permStore.SignAssertion(sessionID, creatorID, "d_creator", auth.RoleEditor, creatorID, 4*time.Hour)

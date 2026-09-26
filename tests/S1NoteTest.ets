@@ -1,5 +1,5 @@
 /**
- * S1NoteTest.ets — HarmonyCanvas v2.4 阶段一「笔记文档」单元测试（T1-2）
+ * S1NoteTest.ets — Honghui v2.4 阶段一「笔记文档」单元测试（T1-2）
  *
  * 测试范围（纯内存逻辑，不触磁盘，可在预览器/真机直接跑）：
  *  - 数值量化：quantize / quantizeClamped / roundSize，以及 q(q(x)) === q(x) 幂等性

@@ -4,7 +4,7 @@
 > 目标项目：鸿绘协作板（OpenHarmony ArkTS 笔记应用）
 
 ## 项目定位
-- 根目录：`C:\Users\27968\WorkBuddy\2026-08-03-10-35-19\harmonycanvas`
+- 根目录：`C:\Users\27968\WorkBuddy\2026-08-03-10-35-19\honghui`
 - 第一步：打开该项目，等 Sync 完成（File → Sync / 自动触发）
 
 ## 任务总目标
@@ -44,7 +44,7 @@
 - 输出：可交互 / 仅渲染 / 崩溃（附截图）
 
 ## 输出要求
-1. 报告落盘：`C:\Users\27968\WorkBuddy\2026-08-03-10-35-19\harmonycanvas\docs\device-verify-report.md`
+1. 报告落盘：`C:\Users\27968\WorkBuddy\2026-08-03-10-35-19\honghui\docs\device-verify-report.md`
 2. 每项格式：「结论（✅/⚠️/❌）+ 方法 + 证据 + 阻塞项」
 3. 纪律：
    - **只验证，不改源码**（所有功能批次在验收中，源码须静止；发现编译错误只报告「文件:行号+错误信息」，不自行修复）

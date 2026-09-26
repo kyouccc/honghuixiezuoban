@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"harmonycanvas/backend/internal/auth"
+	"honghui/backend/internal/auth"
 )
 
 // buildEnvelope 构造最小 SignalEnvelope TLV：field2=msg_type(varint), field3=payload(length-delimited)。

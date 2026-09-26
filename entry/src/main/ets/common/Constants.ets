@@ -46,7 +46,7 @@ export const AI_CONFIDENCE_THRESHOLD: number = 0.80;
 export const APP_PACKAGE_MAX_SIZE: number = 10 * 1024 * 1024;
 
 // ─── API ───
-export const API_BASE_URL: string = 'https://api.harmonycanvas.dev/v1';
+export const API_BASE_URL: string = 'https://api.honghui.dev/v1';
 
 // ─── 错误码 ───
 export enum ErrorCode {

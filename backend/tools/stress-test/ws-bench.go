@@ -6,7 +6,7 @@
 //
 // 用法：
 //
-//	go run ws-bench.go -addr wss://ws.harmonycanvas.dev/ws -room r_xxx \
+//	go run ws-bench.go -addr wss://ws.honghui.dev/ws -room r_xxx \
 //	    -conns 50 -duration 30m -rate 2
 //
 // 输出：连接成功率、断连次数、消息RTT P50/P95/P99、吞吐msg/s，

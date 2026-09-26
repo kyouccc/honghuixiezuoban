@@ -2,7 +2,7 @@
  * CollabStatusService.ets — 页面层 ↔ NoteEngine S2 门面 的 UI 接线服务（v2.3 增量，修复 K-R2-2）
  *
  * 背景：
- *  阶段二 QA（qa-report-harmonycanvas-v2-phase2.md R2-3）遗留项 K-R2-2 指出
+ *  阶段二 QA（qa-report-honghui-v2-phase2.md R2-3）遗留项 K-R2-2 指出
  *  「页面层尚未调用 NoteEngine 的 S2 门面（流转 / 会话 UI 接线后续）」。
  *  本服务作为**唯一的 UI 读模型 / 命令入口**，把 4 个页面对分布式协同模块的访问
  *  收敛到一处，避免每个页面各自 import SessionManager / PermissionGuard / ViewportSyncManager。

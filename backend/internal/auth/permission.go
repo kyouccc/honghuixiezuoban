@@ -86,7 +86,7 @@ type PermissionStore struct {
 func NewPermissionStore(secret string) *PermissionStore {
 	key := secret
 	if key == "" {
-		key = "harmonycanvas-dev-secret"
+		key = "honghui-dev-secret"
 	}
 	return &PermissionStore{
 		secret: []byte(key),

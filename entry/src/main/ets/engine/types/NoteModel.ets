@@ -1,7 +1,7 @@
 /**
  * NoteModel.ets — `.hcnote` 数据模型与常量（v2.4 阶段一，T1-1）
  *
- * 本文件是 `.hcnote` schema v1 的**类型正本**，与 architecture-harmonycanvas-notes.md §2 一一对应。
+ * 本文件是 `.hcnote` schema v1 的**类型正本**，与 architecture-honghui-notes.md §2 一一对应。
  *
  * 冻结约定（S-1）：
  *  1. 顶层必须携带 magic="HCNT" + schemaVersion(整数) + encoding；
@@ -36,6 +36,12 @@ export const HC_NOTE_ENCODING_JSON: string = 'json';
 export const HC_POINT_FORMAT_XY: string = 'xy';
 
 /** 写入方应用标识（仅排障用，不参与兼容判定） */
+/**
+ * 笔记文件 schema 中的应用标识（写入 .hcnote 的 `app` 字段）。
+ *
+ * ⚠️ 该值**必须保持 'harmonycanvas' 不可改**：向下兼容已发布的 v2.7.x 所写入的笔记文件，
+ *    修改后旧笔记将无法被正确识别/读回。属历史数据兼容键，与应用及项目命名无关。
+ */
 export const HC_APP_ID: string = 'harmonycanvas';
 
 /** 写入方应用版本（仅排障用） */

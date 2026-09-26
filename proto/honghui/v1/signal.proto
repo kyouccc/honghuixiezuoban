@@ -1,0 +1,322 @@
+syntax = "proto3";
+package honghui.v1;
+
+// v2.0 增量（S2T01/S2T02/S2T03）：MsgType 增补 MSG_VIEWPORT_SYNC / MSG_PERMISSION_ASSERT /
+// MSG_VIEWPORT_SUB / MSG_VIEWPORT_DIFF；StrokeData 增补 field 10-14；
+// LayerOpType 增补 merge/duplicate/group/ungroup/export；
+// CanvasElement 联合消息（stroke/shape/text_block/annotation/image_ref/mind_map）。
+
+// ─── 外层信封 ───
+message SignalEnvelope {
+  string msg_id = 1;
+  MsgType msg_type = 2;
+  bytes payload = 3;
+  int64 timestamp = 4;
+  string sender_id = 5;
+  VectorClock vector_clock = 6;
+  CompressionType compression = 7;
+  string device_id = 8;
+  string room_id = 9;
+  string trace_id = 10;
+}
+
+enum MsgType {
+  MSG_UNKNOWN = 0;
+  MSG_CRDT_OP = 1;
+  MSG_CURSOR_SYNC = 2;
+  MSG_ROOM_EVENT = 3;
+  MSG_STATE_SYNC = 4;
+  MSG_HEARTBEAT = 5;
+  MSG_LAYER_OP = 6;
+  MSG_AI_RESULT = 7;
+  // ─── v2.0 增量（字段编号永久保留，只追加）───
+  MSG_VIEWPORT_SYNC = 8;       // 视口/页码跟随（低频控制消息，不进 CRDT，HM-09）
+  MSG_PERMISSION_ASSERT = 9;   // 权限断言（加入会话时下发，HM-11）
+  MSG_VIEWPORT_SUB = 10;       // 视口订阅（上报视口矩形/订阅差分，HM-14，P1）
+  MSG_VIEWPORT_DIFF = 11;      // 视口差分广播（服务端→订阅者，HM-14，P1）
+}
+
+enum CompressionType {
+  COMPRESS_NONE = 0;
+  COMPRESS_DEFLATE = 1;
+}
+
+// ─── 向量时钟 ───
+message VectorClock {
+  map<string, int64> clock = 1;
+}
+
+// ─── CRDT操作 ───
+message CRDTOpMessage {
+  OpType op_type = 1;
+  string element_id = 2;
+  string after_id = 3;
+  bytes stroke_data = 4;        // v1 兼容：字段名保留（field 4）
+  int64 lamport_ts = 5;
+  CanvasElement canvas_element = 8;   // v2.0：新元素走 CanvasElement（架构 §8.1 约定 1）
+  string element_type = 9;            // stroke|shape|text_block|annotation|image_ref|mind_map
+}
+
+enum OpType {
+  OP_UNKNOWN = 0;
+  OP_INSERT = 1;
+  OP_DELETE = 2;
+}
+
+// ─── 笔画数据（v2.0 向后兼容扩展 field 10-14）───
+message StrokeData {
+  string id = 1;
+  string layer_id = 2;
+  string tool = 3;
+  string color = 4;
+  float width = 5;
+  repeated Point points = 6;
+  repeated float pressure = 7;
+  int64 created_at = 8;
+  string created_by = 9;
+  string brush_shape = 10;          // round|flat|texture
+  repeated float pressure_curve = 11;  // 压感曲线参数
+  float opacity = 12;               // 0-1
+  string blend_mode = 13;           // normal|multiply
+  string texture = 14;              // 笔刷纹理 id
+}
+
+message Point {
+  double x = 1;
+  double y = 2;
+  int64 t = 3;
+}
+
+// ─── v2.0：CRDT 元素联合类型（架构 §3.2）───
+message CanvasElement {
+  oneof element {
+    StrokeData stroke = 1;
+    ShapeData shape = 2;
+    TextBlockData text_block = 3;
+    AnnotationData annotation = 4;
+    ImageRefData image_ref = 5;
+    MindMapNode mind_map = 6;
+  }
+  string element_type = 7;    // stroke|shape|text_block|annotation|image_ref|mind_map
+  string layer_id = 8;
+  string id = 9;
+  string created_by = 10;
+  int64 created_at = 11;
+}
+
+message ShapeData {
+  string id = 1;
+  string layer_id = 2;
+  string shape_type = 3;   // rectangle|circle|arrow|line
+  double x = 4;
+  double y = 5;
+  double width = 6;
+  double height = 7;
+  string color = 8;
+  double rotation = 9;
+  double line_width = 10;
+  string created_by = 11;
+  int64 created_at = 12;
+}
+
+message TextBlockData {
+  string id = 1;
+  string layer_id = 2;
+  string text = 3;
+  double x = 4;
+  double y = 5;
+  double font_size = 6;
+  string font_family = 7;
+  string align = 8;         // left|center|right
+  string color = 9;
+  string created_by = 10;
+  int64 created_at = 11;
+}
+
+message AnnotationData {
+  string id = 1;
+  string layer_id = 2;
+  string annotation_type = 3;  // highlight|underline|margin|freehand
+  int32 page_index = 4;        // 批注与页面号绑定（HM-13）
+  string ref_doc_id = 5;
+  string ref_element_id = 6;
+  string color = 7;
+  repeated Point points = 8;
+  double width = 9;
+  string created_by = 10;
+  int64 created_at = 11;
+}
+
+message ImageRefData {
+  string id = 1;
+  string layer_id = 2;
+  string image_hash = 3;
+  string mime_type = 4;
+  double x = 5;
+  double y = 6;
+  double width = 7;
+  double height = 8;
+  string binary_ref = 9;    // 旁路二进制通道引用（架构 §8.1 约定 6）
+  string uri = 10;
+  double rotation = 11;
+  double scale = 12;
+  string created_by = 13;
+  int64 created_at = 14;
+}
+
+message MindMapNode {
+  string id = 1;
+  string text = 2;
+  repeated string children = 3;
+  string parent_id = 4;
+  string layout = 5;
+  int32 level = 6;
+}
+
+// ─── 光标同步 ───
+message CursorSyncMessage {
+  string user_id = 1;
+  string user_name = 2;
+  double pos_x = 3;
+  double pos_y = 4;
+  string color = 5;
+}
+
+// ─── 房间事件 ───
+message RoomEventMessage {
+  RoomEventType event_type = 1;
+  string user_id = 2;
+  string user_name = 3;
+  int64 timestamp = 4;
+  string device_role = 5;
+}
+
+enum RoomEventType {
+  EVENT_UNKNOWN = 0;
+  EVENT_USER_JOIN = 1;
+  EVENT_USER_LEAVE = 2;
+  EVENT_ROLE_CHANGE = 3;
+  EVENT_ROOM_CLOSE = 4;
+}
+
+// ─── 状态同步 ───
+message StateSyncRequest {
+  string room_id = 1;
+  VectorClock last_clock = 2;
+  int64 last_op_seq = 3;
+}
+
+message StateSyncResponse {
+  oneof payload {
+    CanvasSnapshot snapshot = 1;
+    OpBatch ops = 2;
+  }
+}
+
+message CanvasSnapshot {
+  VectorClock clock = 1;
+  repeated LayerSnapshot layers = 2;
+  int64 snapshot_seq = 3;
+}
+
+message LayerSnapshot {
+  string layer_id = 1;
+  string layer_name = 2;
+  float opacity = 3;
+  bool visible = 4;
+  bool locked = 5;
+  repeated bytes strokes = 6;
+}
+
+message OpBatch {
+  repeated CRDTOpMessage ops = 1;
+  int64 from_seq = 2;
+  int64 to_seq = 3;
+}
+
+// ─── 图层操作（v2.0 增补 merge/duplicate/group/ungroup/export）───
+message LayerOpMessage {
+  LayerOpType op_type = 1;
+  string layer_id = 2;
+  string layer_name = 3;
+  float opacity = 4;
+  bool visible = 5;
+  bool locked = 6;
+  int32 z_index = 7;
+  repeated string src_layer_ids = 8;   // merge/group 源图层
+  string target_layer_id = 9;          // 合并/分组目标
+  string paper_template = 10;          // 纸图层模板（NP-01）
+  string page_ref = 11;                // 文档页引用（NP-06）
+}
+
+enum LayerOpType {
+  LAYER_CREATE = 0;
+  LAYER_DELETE = 1;
+  LAYER_UPDATE = 2;
+  LAYER_REORDER = 3;
+  LAYER_MERGE = 4;        // v2.0（NP-03）
+  LAYER_DUPLICATE = 5;    // v2.0（NP-03）
+  LAYER_GROUP = 6;        // v2.0（NP-03）
+  LAYER_UNGROUP = 7;      // v2.0（NP-03）
+  LAYER_EXPORT = 8;       // v2.0（NP-03）
+}
+
+// ─── v2.0：权限断言（加入会话时服务端签发，随信令下发，HM-11）───
+enum SessionRole {
+  SESSION_ROLE_UNKNOWN = 0;
+  SESSION_ROLE_VIEWER = 1;
+  SESSION_ROLE_ANNOTATOR = 2;
+  SESSION_ROLE_EDITOR = 3;
+}
+
+message PermissionAssertion {
+  string session_id = 1;
+  string user_id = 2;
+  string device_id = 3;
+  SessionRole role = 4;              // VIEWER=1 ANNOTATOR=2 EDITOR=3
+  string issuer = 5;                 // 签发者（会话创建者）
+  int64 issued_at = 6;
+  int64 expires_at = 7;
+  string signature = 8;              // 服务端 HMAC 签名，防伪造
+}
+
+// ─── v2.0：视口跟随（低频控制消息，HM-09）───
+message ViewportSyncMessage {
+  double center_x = 1;
+  double center_y = 2;
+  double scale = 3;
+  int32 current_page = 4;
+  int64 timestamp = 5;
+  string sender_device_id = 6;
+}
+
+// ─── v2.0：视口订阅 / 差分广播（HM-14，P1）───
+message Rect {
+  double x = 1;
+  double y = 2;
+  double width = 3;
+  double height = 4;
+}
+
+message ViewportSubscription {
+  string session_id = 1;
+  string user_id = 2;
+  Rect viewport = 3;          // 可视区域（世界坐标）
+  int32 current_page = 4;
+}
+
+message ViewportDiffMessage {
+  string session_id = 1;
+  repeated CanvasElement elements = 2;   // 视口内新增/变更元素
+  int64 from_seq = 3;
+  int64 to_seq = 4;
+  bool has_more_outside = 5;             // 区外是否有更多（触发懒加载）
+}
+
+// ─── v2.0：区外懒加载（复用 StateSync 语义，HM-14，P1）───
+message StateSyncByRectRequest {
+  string session_id = 1;
+  Rect rect = 2;                      // 请求区域（网格对齐）
+  VectorClock last_clock = 3;
+}
+

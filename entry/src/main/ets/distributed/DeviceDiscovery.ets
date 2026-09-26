@@ -52,7 +52,7 @@ export interface DeviceDiscoveryCallback {
  * 一个写着"分布式协同"的协作 App，设备管理页却是死路，用户体验不成立。
  *
  * 现改为**真实可用**：
- *  ① 修正 createDeviceManager 的 bundleName —— 原硬编码 'com.harmonycanvas.app'
+ *  ① 修正 createDeviceManager 的 bundleName —— 原硬编码 'com.honghui.app'
  *     与本应用真实包名 com.honghui.note 不一致，设备管理根本创建不起来；
  *  ② 用 distributedDeviceManager.getAvailableDeviceListSync() 读取
  *     **同账号下已就绪的分布式设备**（超级终端/多设备协同已连接设备）并真实展示；
@@ -257,7 +257,7 @@ export class DeviceDiscovery {
    * 生产环境应使用 generateNFCSignatureAsync() 的 HMAC-SHA256。
    */
   generateNFCSignature(roomId: string, joinCode: string, timestamp: number): string {
-    const data = `${roomId}:${joinCode}:${timestamp}:harmonycanvas`;
+    const data = `${roomId}:${joinCode}:${timestamp}:honghui`;
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
       hash = ((hash << 5) - hash) + data.charCodeAt(i);

@@ -1,5 +1,5 @@
 /**
- * run-node-verify.mjs — HarmonyCanvas v2.0 阶段一 P0 核心代码逻辑验证（QA）
+ * run-node-verify.mjs — Honghui v2.0 阶段一 P0 核心代码逻辑验证（QA）
  *
  * 通过 ets-loader.mjs 在 Node 环境直接运行真实 .ets 源文件（mock 鸿蒙 SDK 模块），
  * 对 S1T01~S1T03 交付的纯逻辑模块做运行验证：
@@ -75,7 +75,7 @@ const { DocumentRasterizeError, DOC_RASTERIZE_ERROR_CODE, ITextRasterizer } = aw
 const { PDFRasterizer } = await import(base + 'engine/document/PDFRasterizer.ets');
 const { DocumentImporter, DocFormat, DocumentImportError } = await import(base + 'engine/document/DocumentImporter.ets');
 
-console.log('=== HarmonyCanvas v2.0 阶段一核心逻辑运行验证 ===\n');
+console.log('=== Honghui v2.0 阶段一核心逻辑运行验证 ===\n');
 
 // ═══ 1. BrushRegistry ═══
 console.log('--- BrushRegistry ---');

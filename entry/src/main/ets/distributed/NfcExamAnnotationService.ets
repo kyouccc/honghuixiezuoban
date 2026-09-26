@@ -65,7 +65,7 @@ export class NfcExamAnnotationService {
    */
   async init(): Promise<void> {
     try {
-      this.deviceManager = distributedDeviceManager.createDeviceManager('com.harmonycanvas.exam');
+      this.deviceManager = distributedDeviceManager.createDeviceManager('com.honghui.exam');
       Logger.info(TAG, '设备管理器初始化成功');
     } catch (e) {
       Logger.error(TAG, `设备管理器初始化失败: ${(e as Error).message}`);

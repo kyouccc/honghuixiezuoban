@@ -1,11 +1,11 @@
-# 鸿绘协作板 HarmonyCanvas
+# 鸿绘协作板 Honghui
 
 > 鸿蒙生态中「分布式协同 + 原子化服务 + 端侧AI」三位一体的实时协作白板应用
 
 ## 项目结构
 
 ```
-harmonycanvas/
+honghui/
 ├── entry/                     # 鸿蒙元服务主模块 (ArkTS + ArkUI)
 │   ├── module.json5           # 模块配置（Ability声明/NFC权限/元服务卡片）
 │   ├── build-profile.json5    # 编译配置（资源压缩/代码混淆）
@@ -96,9 +96,21 @@ kubectl apply -f backend/deploy/k8s/
 ```
 
 ## 文档索引
-- [PRD](./prd-harmonycanvas.md) — 产品需求规格
-- [架构设计](./architecture-harmonycanvas.md) — 系统架构
-- [核心代码](./code-harmonycanvas.md) — 完整代码文档
-- [QA报告](./qa-report-harmonycanvas.md) — 质量审查
-- [时序图](./docs/sequence-diagram.mermaid) — 调用流程
-- [类图](./docs/class-diagram.mermaid) — 数据模型
+
+| 文档 | 说明 |
+|---|---|
+| [架构时序图](./docs/sequence-diagram-v2.mermaid) | 端到端调用流程 |
+| [架构类图](./docs/class-diagram-v2.mermaid) | 核心数据模型 |
+| [构建与验证](./docs/BUILD-VERIFY.md) | 如何编译与自检 |
+| [隐私合规](./docs/privacy_compliance.md) | 权限与数据合规说明 |
+| [原子化服务准备](./docs/atomic_service_preparation.md) | 免安装卡片能力规划 |
+| [折叠屏适配](./docs/fold_screen_adaptation.md) | 大屏/折叠形态适配 |
+| [一多适配](./docs/one_multiple_adaptation.md) | 一次开发多端部署 |
+| [墨水屏适配](./docs/) | 见 `docs/` 目录 |
+| [PDF 栅格化可行性](./docs/v2q1-pdf-rasterize-feasibility.md) | 批注底图技术选型 |
+| [图标迁移说明](./docs/icon-migration-guide.md) | 图标资源规范 |
+| [优化总结](./docs/final-optimization-summary.md) | 性能优化记录 |
+| [验收报告模板](./docs/verification-report-template.md) | 真机验证记录模板 |
+| [Git 使用指南](./GIT使用指南.md) | 版本管理与发版流程 |
+| [构建与签名脚本](./build-and-sign.bat) | 命令行打包 |
+| [签名配置模板](./build-profile.json5.template) | 换机后如何恢复签名 |

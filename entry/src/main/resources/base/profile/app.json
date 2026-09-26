@@ -1,13 +1,13 @@
 {
   "app": {
-    "bundleName": "com.harmonycanvas.app",
+    "bundleName": "com.honghui.note",
     "vendor": "Honghui",
-    "versionCode": 1000000,
-    "versionName": "1.0.0",
+    "versionCode": 2007008,
+    "versionName": "2.7.8",
     "icon": "$media:app_icon",
     "label": "$string:EntryAbility_label",
-    "targetAPIVersion": 12,
-    "minAPIVersion": 9,
+    "targetAPIVersion": 24,
+    "minAPIVersion": 12,
     "apiReleaseType": "Release"
   }
 }

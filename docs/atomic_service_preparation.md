@@ -40,8 +40,8 @@
 ```json5
 {
   "app": {
-    "bundleName": "com.harmonycanvas.app",
-    "vendor": "HarmonyCanvas",
+    "bundleName": "com.honghui.app",
+    "vendor": "Honghui",
     "versionCode": 1000000,
     "versionName": "1.0.0",
     "icon": "$media:app_icon",
@@ -205,7 +205,7 @@
 
 **格式：**
 ```
-https://harmonycanvas.com/note/{noteId}?share={shareToken}
+https://honghui.com/note/{noteId}?share={shareToken}
 ```
 
 **参数：**
@@ -216,7 +216,7 @@ https://harmonycanvas.com/note/{noteId}?share={shareToken}
 ```typescript
 async generateShareLink(noteId: string): Promise<string> {
   const shareToken = await this.generateShareToken(noteId);
-  return `https://harmonycanvas.com/note/${noteId}?share=${shareToken}`;
+  return `https://honghui.com/note/${noteId}?share=${shareToken}`;
 }
 ```
 
@@ -224,7 +224,7 @@ async generateShareLink(noteId: string): Promise<string> {
 
 **格式：**
 ```
-https://harmonycanvas.com/collab/{sessionId}?invite={inviteToken}
+https://honghui.com/collab/{sessionId}?invite={inviteToken}
 ```
 
 **参数：**
@@ -235,7 +235,7 @@ https://harmonycanvas.com/collab/{sessionId}?invite={inviteToken}
 ```typescript
 async generateInviteLink(sessionId: string): Promise<string> {
   const inviteToken = await this.generateInviteToken(sessionId);
-  return `https://harmonycanvas.com/collab/${sessionId}?invite=${inviteToken}`;
+  return `https://honghui.com/collab/${sessionId}?invite=${inviteToken}`;
 }
 ```
 
@@ -247,11 +247,11 @@ async generateInviteLink(sessionId: string): Promise<string> {
 onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
   const uri = want.uri;
   
-  if (uri?.startsWith('harmonycanvas://note/')) {
+  if (uri?.startsWith('honghui://note/')) {
     // 处理笔记链接
     const noteId = uri.split('/')[2];
     router.pushUrl({ url: 'pages/NotePage', params: { noteId } });
-  } else if (uri?.startsWith('harmonycanvas://collab/')) {
+  } else if (uri?.startsWith('honghui://collab/')) {
     // 处理协作链接
     const sessionId = uri.split('/')[2];
     router.pushUrl({ url: 'pages/CollabPage', params: { sessionId } });
