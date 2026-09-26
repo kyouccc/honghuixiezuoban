@@ -1,0 +1,105 @@
+%% HarmonyCanvas v2.0 增量时序图（与 architecture-harmonycanvas-v2.md §4 一致）
+
+%% 4.1 单人笔记：文档导入 → 栅格化 → 批注
+sequenceDiagram
+    actor U as 学生用户
+    participant NP as NotePage
+    participant DI as DocumentImporter
+    participant PDF as PDFRasterizer
+    participant LM as LayerManager
+    participant PR as PaperLayerRenderer
+    participant CE as CanvasEngine
+    participant SE as StrokeEngine
+    participant RG as RGAEngine(本地)
+
+    U->>NP: 点击"导入文档"选择 PDF
+    NP->>DI: import(pdfPath)
+    DI->>DI: 识别格式 → PDF
+    DI->>PDF: rasterize(file)
+    PDF->>PDF: 解析页面尺寸/栅格化位图(≤10页 P0)
+    PDF-->>DI: PageLayer[] {page_layer_p0..p11}
+    DI->>LM: createLayer("文档页0","page",pageRef=doc_xxx)
+    LM->>PR: 注册纸图层背景(页位图)
+    DI-->>NP: {doc_id, page_count, page_layers[]}
+    NP->>CE: 渲染底图(只读)
+
+    Note over U,RG: === 用户在第3页手写批注 ===
+    U->>SE: 书写(压感/荧光笔)
+    SE->>SE: 生成 AnnotationData{pageIndex:3, refDocId}
+    SE->>RG: localInsert(annotation) → InsertOp
+    RG-->>SE: op
+    SE->>LM: addElement(批注图层, annotation)
+    LM->>CE: 脏区域重绘(批注叠加页位图)
+    CE-->>U: 批注实时可见(≤9ms)
+
+%% 4.2 超级终端流转：主端 → 跟随端视口/状态同步
+sequenceDiagram
+    actor H as 用户(手机 NoteHost)
+    participant SM as SessionManager(手机)
+    participant DDB as 分布式软总线
+    participant SM2 as SessionManager(平板)
+    actor P as 用户(平板 Follower)
+
+    Note over H,P: === 流转开始（超级终端一键流转） ===
+    H->>SM: startFlow(targetDevice=平板)
+    SM->>DDB: 建立设备组信任通道(deviceGroupId)
+    DDB-->>SM2: 流转邀请 + deviceGroupId
+    SM2-->>SM: 接受(角色=Follower)
+    SM->>SM: transferHost(平板) → 本机降为 Follower
+    SM->>SM2: 下发笔记状态(CRDT op log 追赶 + 文档页引用)
+
+    Note over H,P: === 状态续传（接着写） ===
+    SM2->>SM2: 本地 RGA 收敛(applyRemoteOp 批量)
+    SM2->>SM2: 重建图层栈/PaperLayer 底纸
+    SM2-->>P: 平板恢复笔记全量状态
+
+    Note over H,P: === 视口跟随（低频控制消息） ===
+    SM->>SM2: ViewportSyncMessage{center,scale,page:3}
+    SM2->>SM2: 本地渲染"当前位置"标识
+    SM2-->>SM: 跟随确认(已定位到第3页)
+    P->>P: 直接在平板上继续书写(编辑态)
+    SM2->>SM: 新 CRDT 操作双向同步(全量收敛兜底)
+
+%% 4.3 多人协作：卡片加入 → 权限校验 → CRDT 同步 → 视口差分广播
+sequenceDiagram
+    actor A as 创建者(手机)
+    actor B as 被邀请者(平板)
+    participant Card as 服务卡片
+    participant API as 后端 REST
+    participant Auth as 权限模块(RBAC)
+    participant WS as WS信令网关
+    participant VF as 视口过滤器
+    participant RGA_A as RGA(创建者)
+    participant RGA_B as RGA(被邀请者)
+
+    Note over A,B: === 会话创建与卡片分享 ===
+    A->>API: POST /sessions (default_role=ANNOTATOR)
+    API->>Auth: 登记会话角色表
+    API-->>A: session_id + permission_assertion(EDITOR)
+    A->>Card: 分享卡片(会话名/人数/权限标识)
+
+    Note over A,B: === 卡片加入 + 权限签发 ===
+    B->>Card: 点击卡片加入
+    Card->>API: POST /sessions/:id/join {want_role:ANNOTATOR}
+    API->>Auth: 查角色表 → 授权 ANNOTATOR
+    API-->>B: permission_assertion(ANNOTATOR) + 会话快照
+    B->>WS: 建立 WS(携带断言)
+    WS->>Auth: 校验断言签名/有效期
+    WS-->>B: 加入成功(只读/批注/编辑态由断言决定)
+
+    Note over A,B: === CRDT 同步（全量收敛兜底） ===
+    B->>RGA_B: 本地批注(AnnotationData)
+    RGA_B->>B: PermissionGuard 断言 canWriteElement(annotation)=true
+    B->>WS: CRDTOpMessage + 断言
+    WS->>Auth: 每操作权限校验(opType vs role)
+    WS-->>RGA_A: 广播 CRDT 操作
+    RGA_A->>RGA_A: applyRemoteOp 收敛
+
+    Note over A,B: === 视口差分广播（性能优化） ===
+    A->>WS: ViewportSubscription{rect}
+    WS->>VF: 注册订阅者视口
+    B->>WS: 新增批注元素
+    WS->>VF: 命中 A 视口? → 是
+    VF-->>A: ViewportDiffMessage{可视区内元素}
+    A->>A: 渲染批注(≤150ms P95)
+    Note over WS: 区外内容: StateSyncByRect 懒加载<br/>CRDT op log 仍全量持久化保证收敛

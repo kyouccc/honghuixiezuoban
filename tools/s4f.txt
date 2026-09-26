@@ -1,0 +1,23 @@
+L22 [SURFACE?] *   C-2 历史层背景原为 '#FFFFFF'，把底纸整张盖死 —— 选网格/点阵/横线都还是一片白。
+L386 [SURFACE?] '#000000', '#333333', '#666666', '#999999', '#FFFFFF',
+L1190 [SURFACE?] .backgroundColor('#FFFFFF')
+L1546 [SURFACE?] .backgroundColor('#FFFFFF')
+L2055 [SURFACE?] .backgroundColor(this.showBrushPanel ? HCColor.PRIMARY_BG : '#FFFFFF')
+L2127 [SURFACE?] .fontColor(this.immersiveMode ? '#FFFFFF' : '#444444')
+L2155 [SURFACE?] .backgroundColor(this.showBrushPanel ? HCColor.PRIMARY_BG : '#FFFFFF')
+L2257 [SURFACE?] .backgroundColor(this.currentTool === 'pen' ? HCColor.PRIMARY : '#FFFFFF')
+L2272 [SURFACE?] .backgroundColor(this.currentTool === 'eraser' ? HCColor.PRIMARY : '#FFFFFF')
+L2282 [SURFACE?] .backgroundColor(this.currentTool === 'shape' ? HCColor.PRIMARY : '#FFFFFF')
+L2304 [SURFACE?] .backgroundColor(this.currentTool === tool ? HCColor.PRIMARY : '#FFFFFF')
+L2336 [SURFACE?] .backgroundColor(this.currentTool === tool ? HCColor.PRIMARY : '#FFFFFF')
+L2488 [SURFACE?] .borderRadius(8).backgroundColor('#FFFFFF')
+L2502 [SURFACE?] .borderRadius(8).backgroundColor('#FFFFFF')
+L2610 [SURFACE?] .backgroundColor(this.showBrushPanel ? HCColor.PRIMARY_BG : '#FFFFFF')
+L2722 [SURFACE?] .backgroundColor('#FFFFFF')
+L2851 [SURFACE?] .width('94%').backgroundColor('#FFFFFF').borderRadius(14)
+L2868 [SURFACE?] .backgroundColor('#FFFFFF')
+L2919 [SURFACE?] .width('80%').backgroundColor('#FFFFFF').borderRadius(14)
+L2940 [SURFACE?] .backgroundColor(this.paperTemplate === opt.template ? '#F4F9FF' : '#FFFFFF')
+L2945 [SURFACE?] .backgroundColor('#FFFFFF')
+L3438 [SURFACE?] color: isEraser ? '#FFFFFF' : this.currentColor,
+L3926 [SURFACE?] ctx.strokeStyle = '#FFFFFF';

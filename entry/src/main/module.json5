@@ -1,0 +1,58 @@
+{
+  "module": {
+    "name": "entry",
+    "type": "entry",
+    "description": "$string:module_desc",
+    "mainElement": "EntryAbility",
+    "deviceTypes": [
+      "phone",
+      "tablet",
+      "2in1"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "EntryAbility",
+        "srcEntry": "./ets/entryability/EntryAbility.ets",
+        "description": "$string:EntryAbility_desc",
+        "icon": "$media:app_icon",
+        "label": "$string:EntryAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true,
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "action.system.home"
+            ]
+          }
+        ]
+      }
+    ],
+    // 🔴 v2.7.8：为**确保本次上架**，仅申请 INTERNET。
+//   「设备管理 → 附近设备」依赖 DISTRIBUTED_DATASYNC（user_grant），
+//   开启它需要同步修改 AGC 隐私政策，且该功能无法在提交前自证可用
+//   → 我选择本版本**关闭该功能入口**（见 Constants.FEATURE_DEVICE_DISCOVERY_ENABLED），
+//     从而无需声明该权限，包内权限与隐私政策天然一致。
+//   ✅ 恢复方式（代码已就绪）：
+//     ① 本文件恢复 DISTRIBUTED_DATASYNC 声明 + reason；
+//     ② Constants.ets 的 FEATURE_DEVICE_DISCOVERY_ENABLED 置 true；
+//     ③ AGC 隐私政策逐项声明该权限及用途。
+//     运行时动态申请权限的逻辑已写在 DeviceManagePage.ensurePermissionThenInit()。
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.INTERNET",
+        "reason": "$string:permission_internet_reason",
+        "usedScene": {
+          "abilities": ["EntryAbility"],
+          "when": "inuse"
+        }
+      }
+    ]
+  }
+}

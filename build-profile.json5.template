@@ -1,0 +1,85 @@
+// ══════════════════════════════════════════════════════════════════════════
+// build-profile.json5 模板（已脱敏）
+//
+// 为什么没有把真正的 build-profile.json5 放进 git？
+//   → 该文件的 signingConfigs.material 里**明文存放签名密码**
+//     （storePassword / keyPassword）。一旦仓库被推到 Gitee/GitHub，
+//     密码即泄露，任何人都能用你的证书签名。
+//   → 因此 .gitignore 中排除了它，仅保留本模板供恢复参考。
+//
+// ##########################################################################
+// ## 如何恢复（二选一）                                                  ##
+// ##########################################################################
+//
+// 【方式 A · 推荐】用 DevEco Studio 重新配置签名（最安全，无需手写密码）
+//   1. 打开工程 → File → Project Structure → Signing Configs
+//   2. 勾选 "Automatically generate signature"（自动签名，需登录华为账号）
+//      或取消勾选后手动选择：
+//         Store File     : D:/honghui_board_debug.p12
+//         Profile File   : D:/honghui_board_release_profileRelease.p7b
+//         Certpath File  : D:/honghui_board_release_cert.cer
+//         Key Alias      : honghui_debug_key
+//         两个密码        : 从你自己的密码记录中填入
+//   3. Apply → 确定，DevEco 会自动重建 build-profile.json5
+//
+// 【方式 B】直接新建文件并把下面内容取消注释、填回密码
+//   注意：本模板**不含密码**，密码请从你自己的安全记录中取回。
+//
+// ##########################################################################
+// ## 说明：删除 build-profile.json5 不影响源码回滚                    ##
+// ##   它是被 git 忽略的本地文件，切换分支/标签时不会被覆盖或删除，    ##
+// ##   所以你**标记的每个版本都能正常回滚**，只是首次在新机器上克隆时    ##
+// ##   需要按方式 A 重新配置一次签名。                                  ##
+// ##########################################################################
+
+/*
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "storeFile": "D:/honghui_board_debug.p12",
+          "storePassword": "<在此填入 storePassword>",
+          "keyAlias": "honghui_debug_key",
+          "keyPassword": "<在此填入 keyPassword>",
+          "signAlg": "SHA256withECDSA",
+          "profile": "D:/honghui_board_release_profileRelease.p7b",
+          "certpath": "D:/honghui_board_release_cert.cer"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "useNormalizedOHMUrl": true
+          }
+        },
+        "targetSdkVersion": "6.1.1(24)"
+      }
+    ],
+    "buildModeSet": [
+      { "name": "debug" },
+      { "name": "release" }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": ["default"]
+        }
+      ]
+    }
+  ]
+}
+*/

@@ -1,0 +1,10 @@
+{
+  "app": {
+    "bundleName": "com.honghui.note",
+    "vendor": "Honghui",
+    "versionCode": 2007008,
+    "versionName": "2.7.8",
+    "icon": "$media:app_icon",
+    "label": "$string:app_name"
+  }
+}

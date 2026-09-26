@@ -1,0 +1,13 @@
+{
+  "app": {
+    "bundleName": "com.harmonycanvas.app",
+    "vendor": "Honghui",
+    "versionCode": 1000000,
+    "versionName": "1.0.0",
+    "icon": "$media:app_icon",
+    "label": "$string:EntryAbility_label",
+    "targetAPIVersion": 12,
+    "minAPIVersion": 9,
+    "apiReleaseType": "Release"
+  }
+}

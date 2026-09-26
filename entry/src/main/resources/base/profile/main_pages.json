@@ -1,0 +1,14 @@
+{
+  "src": [
+    "pages/NotePage",
+    "pages/Index",
+    "pages/WhiteboardPage",
+    "pages/AnnotationPage",
+    "pages/JoinRoomPage",
+    "pages/DeviceManagePage",
+    "pages/PrivacyPage",
+    "pages/ThemeSettingsPage",
+    "pages/MindMapEntryPage",
+    "pages/FlashcardEntryPage"
+  ]
+}

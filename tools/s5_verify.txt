@@ -1,0 +1,3 @@
+self display.on foldStatusChange=1
+onFoldStorageChange refs=3
+isHoverState refs=3

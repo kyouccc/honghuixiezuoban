@@ -1,0 +1,4 @@
+﻿ok  	harmonycanvas/backend/internal/auth	1.591s
+ok  	harmonycanvas/backend/internal/crdt	1.663s
+?   	harmonycanvas/backend/internal/room	[no test files]
+?   	harmonycanvas/backend/internal/ws	[no test files]

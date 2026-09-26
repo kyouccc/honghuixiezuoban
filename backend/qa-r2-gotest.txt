@@ -1,0 +1,6 @@
+﻿?   	harmonycanvas/backend/cmd/signal-gateway	[no test files]
+ok  	harmonycanvas/backend/internal/auth	(cached)
+ok  	harmonycanvas/backend/internal/crdt	(cached)
+?   	harmonycanvas/backend/internal/room	[no test files]
+?   	harmonycanvas/backend/internal/ws	[no test files]
+?   	harmonycanvas/backend/tools/stress-test	[no test files]

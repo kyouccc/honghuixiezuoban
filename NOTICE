@@ -1,0 +1,78 @@
+鸿绘协作板 HarmonyCanvas
+Copyright 2026 HarmonyCanvas Contributors
+
+本产品基于 Apache License 2.0 开源，使用了以下第三方开源组件：
+
+═══════════════════════════════════════════════
+Go 后端依赖
+═══════════════════════════════════════════════
+
+github.com/gobwas/ws v1.4.0
+  License: BSD 2-Clause
+  Copyright (c) 2017-2021 Ilya Kamelin, gobwas contributors
+  https://github.com/gobwas/ws/blob/master/LICENSE
+
+github.com/gin-gonic/gin v1.10.0
+  License: MIT
+  Copyright (c) 2014 Manuel Martínez-Almeida
+  https://github.com/gin-gonic/gin/blob/master/LICENSE
+
+github.com/redis/go-redis/v9 v9.7.0
+  License: BSD 2-Clause
+  Copyright (c) 2013 The github.com/redis/go-redis Authors
+
+google.golang.org/protobuf v1.36.5
+  License: BSD 3-Clause
+  Copyright (c) 2018 The Go Authors / Google Inc.
+
+github.com/golang-jwt/jwt/v5 v5.2.1
+  License: MIT
+  Copyright (c) 2012 Dave Grijalva / golang-jwt maintainers
+
+github.com/prometheus/client_golang v1.20.5
+  License: Apache License 2.0
+  Copyright (c) 2012-2025 The Prometheus Authors
+
+go.uber.org/zap v1.27.0
+  License: MIT
+  Copyright (c) 2016-2023 Uber Technologies, Inc.
+
+═══════════════════════════════════════════════
+鸿蒙端（ArkTS）依赖
+═══════════════════════════════════════════════
+
+MindSpore Lite (@mindspore/mindspore-lite-ets) 2.3+
+  License: Apache License 2.0
+  Copyright (c) MindSpore Authors
+  https://gitee.com/mindspore/mindspore-lite
+
+protobuf.js 7.4+
+  License: BSD 3-Clause
+  Copyright (c) 2016, Daniel Wirtz / protobuf.js contributors
+
+pako 2.1+
+  License: MIT AND Zlib
+  Copyright (c) 2014-2017 Vitaly Puzrin, Andrey Tupitsin
+
+OpenHarmony 系统 API (@ohos.distributedDeviceManager / @ohos.nfc 等)
+  License: Apache License 2.0
+  Copyright (c) OpenAtom Foundation / OpenHarmony contributors
+
+═══════════════════════════════════════════════
+数据集与模型（端侧AI微调基线）
+═══════════════════════════════════════════════
+
+QuickDraw Dataset (Google)
+  License: CC BY 4.0
+  https://github.com/googlecreativelab/quickdraw-dataset
+
+CASIA-HWDB / SCUT-EPT 手写数据集
+  学术用途授权，商用前需确认许可条款
+  http://www.nlpr.ia.ac.cn/databases/handwriting/Home.html
+
+═══════════════════════════════════════════════
+说明
+═══════════════════════════════════════════════
+
+上述组件的完整许可证文本见其各自上游仓库。
+本项目代码不包含任何 GPL/LGPL 组件，与 Apache-2.0 分发兼容。

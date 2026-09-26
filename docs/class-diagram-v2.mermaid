@@ -1,0 +1,141 @@
+%% HarmonyCanvas v2.0 增量类图（与 architecture-harmonycanvas-v2.md §3.1 一致）
+
+classDiagram
+    class CanvasElement {
+        <<interface>>
+        +string id
+        +string layerId
+        +string createdBy
+        +int64 createdAt
+    }
+    class StrokeData {
+        +string tool
+        +string color
+        +float width
+        +Point[] points
+        +float[] pressure
+        +string brushShape
+        +float[] pressureCurve
+        +float opacity
+        +string blendMode
+        +string texture
+    }
+    class ShapeData {
+        +string shapeType
+        +float x
+        +float y
+        +float width
+        +float height
+        +string color
+        +float rotation
+    }
+    class TextBlockData {
+        +string text
+        +float x
+        +float y
+        +float fontSize
+        +string fontFamily
+        +string align
+        +string color
+    }
+    class AnnotationData {
+        +string annotationType
+        +int32 pageIndex
+        +string refDocId
+        +string refElementId
+        +string color
+        +Point[] points
+    }
+    class ImageRefData {
+        +string imageHash
+        +string mimeType
+        +float x
+        +float y
+        +float width
+        +float height
+        +string binaryRef
+    }
+    class MindMapNode {
+        +string id
+        +string text
+        +string[] children
+        +string parentId
+        +string layout
+        +int32 level
+    }
+    CanvasElement <|-- StrokeData
+    CanvasElement <|-- ShapeData
+    CanvasElement <|-- TextBlockData
+    CanvasElement <|-- AnnotationData
+    CanvasElement <|-- ImageRefData
+    CanvasElement <|-- MindMapNode
+
+    class Layer {
+        +string id
+        +string name
+        +string type
+        +float opacity
+        +bool visible
+        +bool locked
+        +string groupId
+        +string paperTemplate
+        +string pageRef
+        +CanvasElement[] elements
+        +int64 updatedAt
+    }
+    class LayerManager {
+        +createLayer(name, type) Layer
+        +mergeLayers(srcIds, targetName) Layer
+        +duplicateLayer(id) Layer
+        +groupLayers(ids) Layer
+        +ungroupLayer(id) void
+        +exportLayer(id) HCNoteFile
+        +addElement(layerId, element) void
+    }
+    Layer "1" --> "*" CanvasElement : contains
+
+    class RGAEngine~T~ {
+        +localInsert(value, afterId) InsertOp
+        +localDelete(targetId) DeleteOp
+        +applyRemoteOp(op) bool
+        +getElements() RGAElement~T~[]
+        +applyLayerLWW(layerId, field, value) void
+    }
+    RGAEngine --> CanvasElement : manages
+
+    class SessionManager {
+        +string deviceGroupId
+        +string hostDeviceId
+        +string role
+        +startFlow(targetDeviceId) void
+        +transferHost(newHostDeviceId) void
+        +syncViewport(vp) void
+    }
+    class PermissionGuard {
+        +string role
+        +canWriteElement(elementType) bool
+        +canLayerOp(opType) bool
+        +assertLocalOp(op) bool
+    }
+    class ViewportSubscriptionManager {
+        +Rect viewport
+        +subscribe(rect) void
+        +onDiffBroadcast(elements) void
+        +lazyLoadOutOfView(rect) void
+    }
+    class DocumentImporter {
+        +import(path) DocMeta
+        +rasterizeToPageLayers(doc) PageLayer[]
+    }
+    class HCNoteWriter {
+        +write(note, path) void
+    }
+    class HCNoteReader {
+        +read(path) HCNoteFile
+        +importV1(file) HCNoteFile
+    }
+    class FlashcardStore {
+        +addCard(question, answer) void
+        +getDueCards() Flashcard[]
+        +updateReview(cardId, grade) void
+    }

@@ -1,0 +1,12 @@
+﻿=== RUN   TestRelayCheckMessagePermission
+--- PASS: TestRelayCheckMessagePermission (0.00s)
+=== RUN   TestRelayNonCRDTOpAllowed
+--- PASS: TestRelayNonCRDTOpAllowed (0.00s)
+=== RUN   TestRelayParseCRDTOpFallback
+--- PASS: TestRelayParseCRDTOpFallback (0.00s)
+=== RUN   TestRelayAnnotatorDeleteAnnotationWithType
+--- PASS: TestRelayAnnotatorDeleteAnnotationWithType (0.00s)
+=== RUN   TestRelayMalformedEnvelope
+--- PASS: TestRelayMalformedEnvelope (0.00s)
+PASS
+ok  	harmonycanvas/backend/internal/crdt	1.642s

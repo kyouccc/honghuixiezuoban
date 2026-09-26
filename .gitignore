@@ -1,0 +1,76 @@
+# ══════════════════════════════════════════════════════════════════
+# HarmonyOS / ArkTS 工程 .gitignore
+# 目标：只跟踪「源码与配置」，排除「构建产物、依赖、IDE 缓存、敏感信息」
+# ══════════════════════════════════════════════════════════════════
+
+# ── 构建产物 ──
+build/
+entry/build/
+entry/.preview/
+.hvigor/
+.appanalyzer/
+.cxx/
+*.hap
+*.hsp
+*.har
+
+# ── 依赖（体积大，可由 ohpm/npm install 还原）──
+node_modules/
+oh_modules/
+oh-package-lock.json5
+package-lock.json
+
+# ── IDE 与本地环境 ──
+.idea/
+local.properties
+*.iml
+
+# ══════════════════════════════════════════════════════════════════
+# ⚠️ 敏感信息：签名配置含明文密码，绝不入库
+#    恢复方式见 build-profile.json5.template 顶部说明
+#    （本地删除该文件也能正常编译，只是签名需在 DevEco 里重选一次）
+# ══════════════════════════════════════════════════════════════════
+build-profile.json5
+
+# ── 签名/证书材料（若曾复制到工程内）──
+*.p12
+*.cer
+*.p7b
+*.csr
+*.keystore
+*.jks
+*.pem
+
+# ── 调试与临时文件（历次排查残留）──
+*.log
+_bash_probe.txt
+_diag.txt
+_env_probe.txt
+_ls.txt
+_lsroot.txt
+_pdfd*.txt
+_probe.txt
+_res*.txt
+bl_*.txt
+c01_*
+procs.txt
+probe_*.log
+w_new.txt
+w_old.txt
+wb.log
+
+# ── 截图（排查用，非交付物）──
+screenshot*.jpeg
+screenshot*.png
+
+# ── 系统文件 ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── 排查用临时目录（补充）──
+_c02test/
+
+# ── 构建日志（txt 形式）──
+build_*.txt
+build_errors*.txt

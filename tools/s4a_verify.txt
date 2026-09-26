@@ -1,0 +1,15 @@
+bad=0 good=14
+L1493: .fontColor(HCColor.PRIMARY)
+L2126: .backgroundColor(this.immersiveMode ? HCColor.PRIMARY : '#F0F0F0')
+L2158: color: this.showBrushPanel ? HCColor.PRIMARY : '#E0E0E0',
+L2257: .backgroundColor(this.currentTool === 'pen' ? HCColor.PRIMARY : '#FFFFFF')
+L2272: .backgroundColor(this.currentTool === 'eraser' ? HCColor.PRIMARY : '#FFFFFF')
+L2282: .backgroundColor(this.currentTool === 'shape' ? HCColor.PRIMARY : '#FFFFFF')
+L2304: .backgroundColor(this.currentTool === tool ? HCColor.PRIMARY : '#FFFFFF')
+L2307: color: this.currentTool === tool ? HCColor.PRIMARY : '#E0E0E0',
+L2336: .backgroundColor(this.currentTool === tool ? HCColor.PRIMARY : '#FFFFFF')
+L2338: .border({ width: this.currentTool === tool ? 0 : 1, color: this.currentTool === tool ? HCC
+L2829: .stroke(this.currentColor === c ? HCColor.PRIMARY : '#E0E0E0')
+L2885: .border({ width: this.currentShape === shape ? 2 : 1, color: this.currentShape === shape ?
+L2903: if (this.currentWidth === w) Text('✓').fontColor(HCColor.PRIMARY)
+L2934: Text('✓').fontSize(13).fontColor(HCColor.PRIMARY)

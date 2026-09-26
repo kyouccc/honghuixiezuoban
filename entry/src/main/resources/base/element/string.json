@@ -1,0 +1,44 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "entry module"
+    },
+    {
+      "name": "app_desc",
+      "value": "鸿绘协作板"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "EntryAbility"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "鸿绘协作板"
+    },
+    {
+      "name": "permission_internet_reason",
+      "value": "用于同步白板数据、获取云端协作内容"
+    },
+    {
+      "name": "permission_distributed_reason",
+      "value": "用于同一华为账号下多设备之间共享白板内容（分布式协同）"
+    },
+    {
+      "name": "permission_network_info_reason",
+      "value": "用于获取网络状态与同步白板数据"
+    },
+    {
+      "name": "permission_distributed_datasync_reason",
+      "value": "用于同一华为账号下多设备之间共享白板与笔记内容（分布式协同）"
+    },
+    {
+      "name": "permission_read_media_reason",
+      "value": "用于读取相册图片插入到画布"
+    },
+    {
+      "name": "permission_write_media_reason",
+      "value": "用于将导出的图片保存到相册"
+    }
+  ]
+}

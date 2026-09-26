@@ -1,0 +1,18 @@
+﻿=== HarmonyCanvas v2.0 闃舵涓€鏍稿績閫昏緫杩愯楠岃瘉 ===
+
+--- BrushRegistry ---
+--- CanvasElement ---
+--- LayerManager ---
+--- TextBlockTool ---
+--- CRDTOp ---
+--- PaperLayerRenderer ---
+   [PP-07] 璇箟瀹℃煡锛歅aperLayerRenderer 浠呯粯鍒?Canvas锛屾棤 CRDT 鍐欏叆璋冪敤锛堥潤鎬佺‘璁わ級
+--- PDFRasterizer ---
+--- DocumentImporter ---
+--- 杈圭晫鍦烘櫙 ---
+   [EDGE-01] 瑙傚療锛氱己 pageIndex 鐨?annotation 鍒ゅ埆涓?'stroke'锛堟灦鏋勭害瀹?5 瑕佹眰鏃犳晥鍏冪礌鎷掔粷鍏?RGA锛?   [EDGE-02] 瑙傚療锛氱己 backgroundColor 鏃堕〉闈?bitmap=闈?null
+--- Round 2 鍥炲綊涓撻」 ---
+   [E2-05] 瑙傚療锛氱己 pageIndex 鐨勭暩褰?annotation 鈫?鍒ゅ埆='stroke', addElement=true锛堝垽鍒眰榛樿 stroke 鍒嗘敮锛岃鎶ュ憡 E-2 杈圭晫锛?
+=== 楠岃瘉缁撴灉 ===
+Total: 217 | Passed: 217 | Failed: 0
+鍏ㄩ儴閫氳繃 鉁?

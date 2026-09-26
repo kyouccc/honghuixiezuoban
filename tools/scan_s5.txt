@@ -1,0 +1,18 @@
+build() spans lines 1147..1473
+--- 关键行深度（缩进 vs 实际括号深度）---
+L1178 depth=6 indent=8 | Canvas(this.ctxPaper)
+L1206 depth=6 indent=8 | Canvas(this.ctxHistory)
+L1221 depth=6 indent=8 | Canvas(this.ctxActive)
+L1241 depth=8 indent=12 | } else {
+L1260 depth=7 indent=8 | } else {
+L1280 depth=5 indent=6 | //   Stack 的 height('100%') 与 layoutWeight(1) 循环/冲突解析为 0 → Canvas 组件高度
+L1281 depth=5 indent=6 | //   解法：去掉 height('100%')（与权重冲突），layoutWeight(1)+flexGrow(1) 双权重分配剩余，
+L1282 depth=5 indent=6 | //         再加 constraintSize minHeight 绝对兜底（不依赖父链，保证画布至少有可命中的物理高度）。
+L1287 depth=5 indent=6 | .layoutWeight(1)
+L1289 depth=5 indent=6 | .constraintSize({ minHeight: HCMetric.canvasMinHeight('sm', this.isHov
+L1296 depth=5 indent=6 | // 反向约束（约定 G-2）：折痕区固定高度 + 下半区固定高度 → layoutWeight(1) 自动反推上半区画布高度 ≈ crea
+L1309 depth=6 indent=6 | } else {
+L1310 depth=6 indent=8 | this.buildBottomBar();
+L1314 depth=4 indent=6 | .layoutWeight(1)
+L1324 depth=3 indent=6 | .layoutWeight(1)
+--- 总行数: 327，末深度: 0 ---

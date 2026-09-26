@@ -1,0 +1,25 @@
+# CronHPA 定时扩容（v1.1新增）
+# 会议类负载有强时段性（工作日9-11点/14-17点），
+# 动态HPA从2→50副本需8分钟以上，无法应对突发。
+# 策略：高峰前预扩至10副本（含4副本突发吸收池），高峰后回落。
+# 需安装 CCE cronhpa 插件（或开源 kubernetes-sigs/descheduler 等价方案）。
+apiVersion: autoscaling.alicloud.com/v1beta1
+kind: CronHorizontalPodAutoscaler
+metadata:
+  name: signal-gateway-cronhpa
+  namespace: harmonycanvas
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: signal-gateway
+  excludeDates: []   # 可填入节假日ISO日期跳过预扩
+  jobs:
+  - name: "weekday-morning-scale-up"
+    schedule: "30 8 * * 1-5"     # 工作日 08:30 高峰前预扩
+    targetSize: 10               # 常态10副本 = 2万连接容量
+    runOnce: false
+  - name: "weekday-evening-scale-down"
+    schedule: "30 18 * * 1-5"    # 工作日 18:30 回落至基线
+    targetSize: 2
+    runOnce: false
