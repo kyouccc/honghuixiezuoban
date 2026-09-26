@@ -113,13 +113,29 @@ echo       [PASS] no signing config tracked / no certificates / no real password
 echo.
 
 echo [4/6] Pushing main branch
-REM Restore interactive auth so Git Credential Manager can open the browser.
-set GIT_TERMINAL_PROMPT=
-set GIT_HTTP_TIMEOUT=
-set GIT_HTTP_LOW_SPEED_LIMIT=
-set GIT_HTTP_LOW_SPEED_TIME=
+REM ------------------------------------------------------------------
+REM Re-enable interactive auth. These were turned OFF for the probe step,
+REM and GCM_INTERACTIVE=never was the reason the browser never opened:
+REM   "fatal: Cannot prompt because user interactivity has been disabled."
+REM Set explicit positive values instead of relying on "unset".
+REM ------------------------------------------------------------------
+set "GIT_HTTP_TIMEOUT="
+set "GIT_HTTP_LOW_SPEED_LIMIT="
+set "GIT_HTTP_LOW_SPEED_TIME="
+set "GIT_TERMINAL_PROMPT=1"
+set "GCM_INTERACTIVE=true"
+set "GCM_PROVIDER=github"
+git config --global credential.interactive auto
+
 echo.
-echo       A browser window may pop up. Just log in to GitHub and authorize.
+echo       +------------------------------------------------------+
+echo       ^| A BROWSER WINDOW WILL OPEN - just log in and authorize ^|
+echo       ^|                                                        ^|
+echo       ^| If it does NOT open and you are asked for a password   ^|
+echo       ^| in this window, do NOT type your GitHub login password ^|
+echo       ^| (it will always fail). Press Ctrl+C and use a token:   ^|
+echo       ^| see the TOKEN instructions printed below if push fails.^|
+echo       +------------------------------------------------------+
 echo.
 git push -u origin main
 if errorlevel 1 goto FAIL
